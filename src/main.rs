@@ -10,7 +10,6 @@ extern crate r0;
 use stm32f7::{system_clock, sdram, lcd, i2c, touch, board, embedded};
 use core::ptr;
 
-#[no_mangle]
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
     let mut visuals = visuals::Visuals::new(stm);
@@ -27,6 +26,7 @@ pub struct stm {
     led: embedded::interfaces::gpio::OutputPin,
 }
 
+#[no_mangle]
 pub unsafe extern "C" fn reset() -> ! {
     extern "C" {
         static __DATA_LOAD: u32;
