@@ -33,23 +33,22 @@ pub unsafe extern "C" fn reset() -> ! {
 
     stm32f7::heap::init();
 
-    /*// enable floating point unit
+    // enable floating point unit
     unsafe {
         let scb = stm32f7::cortex_m::peripheral::scb_mut();
         scb.cpacr.modify(|v| v | 0b1111 << 20);
     }
-*/
-    let mut stm : stm = init(board::hw());
+    
+    let mut stm: stm = init(board::hw());
     main(stm);
 }
 
 fn main(mut stm: stm) -> ! {
-       
-        stm.lcd.clear_screen();
-    
+    stm.lcd.clear_screen();
+
     let mut visuals = visuals::Visuals::new(stm);
     loop {
-        visuals.blink_led(500);
+        visuals.spiral_visuals();
     }
 }
 
@@ -111,7 +110,7 @@ fn init(hw: board::Hardware) -> stm {
     sdram::init(rcc, fmc, &mut gpio);
     // lcd controller
     let mut lcd = lcd::init(ltdc, rcc, &mut gpio);
-    
+
     // configure led pin as output pin
     let led_pin = (gpio::Port::PortI, gpio::Pin::Pin1);
     let mut led = gpio.to_output(led_pin,
@@ -132,7 +131,7 @@ fn init(hw: board::Hardware) -> stm {
     stm {
         gpio: gpio,
         i2c_3: i2c_3,
-        lcd:lcd,
+        lcd: lcd,
         led: led,
     }
 }

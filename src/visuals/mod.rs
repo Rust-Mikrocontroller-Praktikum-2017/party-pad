@@ -17,7 +17,7 @@ pub struct Visuals {
 }
 
 impl Visuals {
-    pub fn new(stm:stm) -> Visuals {
+    pub fn new(stm: stm) -> Visuals {
         Visuals {
             current_visualizer: default_visualizer::DefaultVisualizer::new(),
             stm: stm,
@@ -44,6 +44,7 @@ impl Visuals {
             last_led_toggle = ticks;
         }
     }
+
     pub fn spiral_visuals(&mut self) {
         let mut color1 = 0xf00f | 0x8000;
         let mut color2 = 0xffff | 0x8000;
@@ -69,11 +70,15 @@ impl Visuals {
     fn draw_rectangle(&mut self, color: u16) {
         for x in self.x_min..self.x_max {
             self.stm.lcd.print_point_color_at(x, self.y_min, color);
-            self.stm.lcd.print_point_color_at(x, self.y_max - 1, color);
+            self.stm
+                .lcd
+                .print_point_color_at(x, self.y_max - 1, color);
         }
         for y in self.y_min + 1..self.y_max - 1 {
             self.stm.lcd.print_point_color_at(self.x_min, y, color);
-            self.stm.lcd.print_point_color_at(self.x_max - 1, y, color);
+            self.stm
+                .lcd
+                .print_point_color_at(self.x_max - 1, y, color);
         }
     }
 
