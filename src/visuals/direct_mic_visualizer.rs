@@ -1,7 +1,7 @@
 use visuals::visualizer as vz;
 use visuals;
 use collections::boxed::Box;
-use super::stm;
+use super::super::stm;
 use visuals::draw;
 use visuals::draw::xy;
 use stm32f7::lcd;
@@ -19,7 +19,7 @@ impl vz::Visualizer for DirectMicVisualizer {
             y_max: 272,
         };
         let mut pos = spectrum[2] as u16;
-        let bar_width = 2;
+        let bar_width = spectrum[1] as u16;
         let data0 = spectrum[0] as i16;
         if pos + 2 * bar_width >= xy.x_max {
             pos = 0;

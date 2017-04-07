@@ -11,25 +11,38 @@ use stm32f7::{system_clock, sdram, lcd, i2c, audio, touch, board, embedded};
 mod visuals;
 
 use core::ptr;
+use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::default_visualizer::DefaultVisualizer;
 use visuals::visualizer::Visualizer;
 
 
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
-    let spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
+    let  mut spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
     use collections::boxed::Box;
 
-    let current_visualizer: Box<Visualizer> = DefaultVisualizer::new();
+    let current_visualizer: Box<Visualizer> = DirectMicVisualizer::new();
 
     let mut data0;
     let mut data1;
+    let bar_width = 2;
+    let mut pos = 0;
     loop {
         while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
         data0 = stm.sai_2.bdr.read().data();
         while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
         data1 = stm.sai_2.bdr.read().data();
+        spectrum[0] = data0 as f32;
+        spectrum[2] = pos as f32;
+        spectrum[1] = bar_width as f32;
+        if pos + 2 * bar_width >= 480 {
+            pos = 0;
+            stm.lcd.clear_screen();
+            stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
+        }
         current_visualizer.draw(&mut stm, spectrum);
+        pos += bar_width;
+
     }
 }
 
