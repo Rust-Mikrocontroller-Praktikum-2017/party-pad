@@ -4,3 +4,4 @@ Cargo.lock
 .vscode
 rls.toml
 rls.sh
+*.bk
