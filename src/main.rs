@@ -14,8 +14,9 @@ use core::ptr;
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
     let mut visuals = visuals::Visuals::new(stm);
+    let spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
     loop {
-        visuals.spiral_visuals();
+        visuals.draw_with_current(spectrum);
     }
 }
 

@@ -6,6 +6,7 @@ use super::stm;
 extern crate stm32f7_discovery as stm32f7;
 use stm32f7::{system_clock, i2c, board, touch, embedded};
 use core::ptr;
+use visuals::visualizer::Visualizer;
 
 pub struct Visuals {
     current_visualizer: Box<visualizer::Visualizer>,
@@ -26,6 +27,9 @@ impl Visuals {
             y_min: 0,
             y_max: 272,
         }
+    }
+    pub fn set_visualizer(&mut self, visualizer: Box<Visualizer>) {
+        self.current_visualizer = visualizer;
     }
     pub fn draw_with_current(&mut self, spectrum: [f32; 16]) {
         self.current_visualizer.draw(spectrum);
