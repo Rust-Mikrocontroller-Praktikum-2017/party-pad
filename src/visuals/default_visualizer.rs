@@ -1,8 +1,8 @@
 use visuals::visualizer as vz;
-use visuals;
 use collections::boxed::Box;
-use super::stm;
+use super::super::stm;
 use visuals::draw;
+use visuals::constants::Color;
 use visuals::draw::xy;
 
 
@@ -21,6 +21,7 @@ impl vz::Visualizer for DefaultVisualizer {
                           &mut stm);
     }
 }
+
 impl DefaultVisualizer {
     pub fn new() -> Box<DefaultVisualizer> {
         Box::new(DefaultVisualizer {})

@@ -1,6 +1,9 @@
 #![no_std]
 #![no_main]
 #![feature(collections)]
+#![feature(plugin)]
+#![plugin(clippy)]
+
 mod visuals;
 
 extern crate stm32f7_discovery as stm32f7;
@@ -9,13 +12,18 @@ extern crate collections;
 extern crate r0;
 use stm32f7::{system_clock, sdram, lcd, i2c, touch, board, embedded};
 use core::ptr;
+use visuals::default_visualizer::DefaultVisualizer;
+use visuals::visualizer::Visualizer;
 
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
-    let mut visuals = visuals::Visuals::new(stm);
     let spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
+    use collections::boxed::Box;
+
+    let current_visualizer: Box<Visualizer> = DefaultVisualizer::new();
+
     loop {
-        visuals.draw_with_current(spectrum);
+        current_visualizer.draw(&mut stm, spectrum);
     }
 }
 
@@ -50,12 +58,10 @@ pub unsafe extern "C" fn reset() -> ! {
     stm32f7::heap::init();
 
     // enable floating point unit
-    unsafe {
-        let scb = stm32f7::cortex_m::peripheral::scb_mut();
-        scb.cpacr.modify(|v| v | 0b1111 << 20);
-    }
+    let scb = stm32f7::cortex_m::peripheral::scb_mut();
+    scb.cpacr.modify(|v| v | 0b1111 << 20);
     
-    let mut stm: stm = init(board::hw());
+    let stm = init(board::hw());
     main(stm);
 }
 
@@ -116,7 +122,7 @@ fn init(hw: board::Hardware) -> stm {
     // init sdram (display buffer)
     sdram::init(rcc, fmc, &mut gpio);
     // lcd controller
-    let mut lcd = lcd::init(ltdc, rcc, &mut gpio);
+    let lcd = lcd::init(ltdc, rcc, &mut gpio);
 
     // configure led pin as output pin
     let led_pin = (gpio::Port::PortI, gpio::Pin::Pin1);

@@ -1,4 +1,4 @@
-use super::stm;
+use super::super::stm;
 use stm32f7::system_clock;
 
 #[derive(Clone)]
