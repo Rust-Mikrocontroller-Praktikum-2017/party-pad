@@ -7,6 +7,9 @@ extern crate collections;
 // initialization routines for .data and .bss
 extern crate r0;
 use stm32f7::{system_clock, sdram, lcd, i2c, audio, touch, board, embedded};
+
+mod visuals;
+
 use core::ptr;
 use visuals::default_visualizer::DefaultVisualizer;
 use visuals::visualizer::Visualizer;
