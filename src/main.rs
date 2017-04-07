@@ -11,6 +11,21 @@ use stm32f7::{system_clock, sdram, lcd, i2c, touch, board, embedded};
 use core::ptr;
 
 #[no_mangle]
+fn main(mut stm: stm) -> ! {
+    stm.lcd.clear_screen();
+    let mut visuals = visuals::Visuals::new(stm);
+    loop {
+        visuals.spiral_visuals();
+    }
+}
+
+pub struct stm {
+    gpio: embedded::interfaces::gpio::Gpio,
+        i2c_3: i2c::I2C,
+    lcd: stm32f7::lcd::Lcd,
+    led: embedded::interfaces::gpio::OutputPin,
+}
+
 pub unsafe extern "C" fn reset() -> ! {
     extern "C" {
         static __DATA_LOAD: u32;
@@ -41,15 +56,6 @@ pub unsafe extern "C" fn reset() -> ! {
     
     let mut stm: stm = init(board::hw());
     main(stm);
-}
-
-fn main(mut stm: stm) -> ! {
-    stm.lcd.clear_screen();
-
-    let mut visuals = visuals::Visuals::new(stm);
-    loop {
-        visuals.spiral_visuals();
-    }
 }
 
 fn init(hw: board::Hardware) -> stm {
@@ -134,11 +140,4 @@ fn init(hw: board::Hardware) -> stm {
         lcd: lcd,
         led: led,
     }
-}
-
-pub struct stm {
-    gpio: embedded::interfaces::gpio::Gpio,
-    i2c_3: i2c::I2C,
-    lcd: stm32f7::lcd::Lcd,
-    led: embedded::interfaces::gpio::OutputPin,
 }
