@@ -10,6 +10,7 @@ use stm32f7::{system_clock, sdram, lcd, i2c, audio, touch, board, embedded};
 
 mod visuals;
 
+use collections::boxed::Box;
 use core::ptr;
 use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::default_visualizer::DefaultVisualizer;
@@ -19,10 +20,12 @@ use visuals::visualizer::Visualizer;
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
     let  mut spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
-    use collections::boxed::Box;
 
-    let current_visualizer: Box<Visualizer> = DirectMicVisualizer::new();
-
+    let direct_mic_vz: Box<Visualizer> = DirectMicVisualizer::new();
+    let default_vz: Box<Visualizer> =  DefaultVisualizer::new(
+                          0xFFFF,
+                          0xFC00);
+    let current_visualizer = direct_mic_vz;
     let mut data0;
     let mut data1;
     let bar_width = 2;

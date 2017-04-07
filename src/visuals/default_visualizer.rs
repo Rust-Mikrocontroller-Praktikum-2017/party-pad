@@ -6,7 +6,11 @@ use visuals::constants::Color;
 use visuals::draw::xy;
 
 
-pub struct DefaultVisualizer;
+pub struct DefaultVisualizer {
+    color1: u16,
+    color2: u16,
+}
+
 impl vz::Visualizer for DefaultVisualizer {
     fn draw(&self, mut stm: &mut stm, spectrum: [f32; 16]) {
         //draw something
@@ -16,15 +20,18 @@ impl vz::Visualizer for DefaultVisualizer {
                               y_min: 0,
                               y_max: 272,
                           },
-                          0xFFFF,
-                          0xFC00,
+                          self.color1,
+                          self.color2,
                           &mut stm);
     }
 }
 
 impl DefaultVisualizer {
-    pub fn new() -> Box<DefaultVisualizer> {
-        Box::new(DefaultVisualizer {})
+    pub fn new(color1: u16, color2: u16) -> Box<DefaultVisualizer> {
+        Box::new(DefaultVisualizer {
+                     color1: color1,
+                     color2: color2,
+                 })
     }
 }
 
