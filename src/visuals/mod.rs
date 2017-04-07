@@ -1,5 +1,6 @@
 mod visualizer;
 mod default_visualizer;
+mod direct_mic_visualizer;
 mod draw;
 
 use collections::boxed::Box;
@@ -17,7 +18,7 @@ pub struct Visuals {
 impl Visuals {
     pub fn new(stm: stm) -> Visuals {
         Visuals {
-            current_visualizer: default_visualizer::DefaultVisualizer::new(),
+            current_visualizer: direct_mic_visualizer::DirectMicVisualizer::new(),
             stm: stm,
         }
     }

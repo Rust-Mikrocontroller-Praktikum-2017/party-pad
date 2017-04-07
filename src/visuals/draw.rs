@@ -27,6 +27,20 @@ pub fn draw_rectangle(xy: &xy, color: u16, mut stm: &mut stm) {
     }
 }
 
+pub fn print_fill_rect(stm: &mut stm,
+                   x_start: u16,
+                   x_end: u16,
+                   y_start: u16,
+                   y_end: u16,
+                   color: u16) {
+
+    for x in x_start..x_end {
+        for y in y_start..y_end {
+            stm.lcd.print_point_color_at(x as u16, y as u16, color);
+        }
+    }
+}
+
 pub fn draw_spiral(xy: xy, color1: u16, color2: u16, mut stm: &mut stm) {
     let mut yx = xy.clone();
     let mut start_color = color1;

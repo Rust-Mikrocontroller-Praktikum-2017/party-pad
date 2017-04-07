@@ -1,20 +1,27 @@
 #![no_std]
 #![no_main]
 #![feature(collections)]
-mod visuals;
+pub mod visuals;
 
 extern crate stm32f7_discovery as stm32f7;
 extern crate collections;
 // initialization routines for .data and .bss
 extern crate r0;
-use stm32f7::{system_clock, sdram, lcd, i2c, touch, board, embedded};
+use stm32f7::{system_clock, sdram, lcd, i2c, audio, touch, board, embedded};
 use core::ptr;
+
 
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
     let mut visuals = visuals::Visuals::new(stm);
     let spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
+    let mut data0;
+    let mut data1;
     loop {
+        while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+        data0 = stm.sai_2.bdr.read().data();
+        while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+        data1 = stm.sai_2.bdr.read().data();
         visuals.draw_with_current(spectrum);
     }
 }
@@ -24,6 +31,7 @@ pub struct stm {
         i2c_3: i2c::I2C,
     lcd: stm32f7::lcd::Lcd,
     led: embedded::interfaces::gpio::OutputPin,
+    sai_2: &'static mut board::sai::Sai,
 }
 
 #[no_mangle]
@@ -78,6 +86,7 @@ fn init(hw: board::Hardware) -> stm {
         gpio_j,
         gpio_k,
         i2c_3,
+        sai_2,
         ..
     } = hw;
 
@@ -135,10 +144,16 @@ fn init(hw: board::Hardware) -> stm {
 
     touch::check_family_id(&mut i2c_3).unwrap();
 
+    // sai and stereo microphone
+    audio::init_sai_2_pins(&mut gpio);
+    audio::init_sai_2(sai_2, rcc);
+    assert!(audio::init_wm8994(&mut i2c_3).is_ok());
+
     stm {
         gpio: gpio,
         i2c_3: i2c_3,
         lcd: lcd,
         led: led,
+        sai_2: sai_2,
     }
 }
