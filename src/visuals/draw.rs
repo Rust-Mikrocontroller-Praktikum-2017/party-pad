@@ -16,6 +16,77 @@ pub fn blink_led(stm: &mut stm) -> usize {
     system_clock::ticks()
 }
 
+pub fn draw_fill_circle(stm: &mut stm,
+                        x_center: u16,
+                        y_center: u16,
+                        radius: u16,
+                        x_low_bound: u16,
+                        x_high_bound: u16,
+                        y_low_bound: u16,
+                        y_high_bound: u16,
+                        color: u16) {
+    /*
+    let x_max = 480;
+    let y_max = 272;
+    assert!(x_center + radius <= x_max && y_center + radius <= y_max);
+    assert!(x_center - radius <= x_max && y_center - radius <= y_max);
+    //assert!(is_legal_coord(x_center, y_center));
+    */
+    stm.lcd.print_point_color_at(x_center, y_center, color);
+    let mut x_offset = 0;
+    for y_offset in 0..radius {
+        x_offset = 0;
+        while euclidean_dist_squared(x_center + x_offset,
+                                     y_center + y_offset,
+                                     x_center,
+                                     y_center) < radius * radius {
+            stm.lcd
+                .print_point_color_at(x_center + x_offset, y_center + y_offset, color);
+            stm.lcd
+                .print_point_color_at(x_center + x_offset, y_center - y_offset, color);
+            stm.lcd
+                .print_point_color_at(x_center - x_offset, y_center + y_offset, color);
+            stm.lcd
+                .print_point_color_at(x_center - x_offset, y_center - y_offset, color);
+            x_offset += 1;
+        }
+    }
+    /*
+    for x in x_low_bound..x_high_bound {
+        for y in y_low_bound..y_high_bound {
+            if euclidean_dist_squared(x, y, x_center, y_center) < radius * radius {
+                stm.lcd.print_point_color_at(x, y, color);
+            } else {
+                stm.lcd.print_point_color_at(x, y, 0x8000);
+            }
+        }
+    }*/
+}
+//TODO move to different file?
+fn euclidean_dist_squared(x_1: u16, y_1: u16, x_2: u16, y_2: u16) -> u16 {
+    let x_low;
+    let x_high;
+    let y_low;
+    let y_high;
+    if x_1 <= x_2 {
+        x_low = x_1;
+        x_high = x_2;
+    } else {
+        x_low = x_2;
+        x_high = x_1;
+    }
+    if y_1 <= y_2 {
+        y_low = y_1;
+        y_high = y_2;
+    } else {
+        y_low = y_2;
+        y_high = y_1;
+    }
+    x_high - x_low;
+    y_high - y_low;
+    (x_high - x_low) * (x_high - x_low) + (y_high - y_low) * (y_high - y_low)
+}
+
 pub fn draw_rectangle(xy: &xy, color: u16, mut stm: &mut stm) {
     for x in xy.x_min..xy.x_max {
         stm.lcd.print_point_color_at(x, xy.y_min, color);
@@ -28,11 +99,11 @@ pub fn draw_rectangle(xy: &xy, color: u16, mut stm: &mut stm) {
 }
 
 pub fn print_fill_rect(stm: &mut stm,
-                   x_start: u16,
-                   x_end: u16,
-                   y_start: u16,
-                   y_end: u16,
-                   color: u16) {
+                       x_start: u16,
+                       x_end: u16,
+                       y_start: u16,
+                       y_end: u16,
+                       color: u16) {
 
     for x in x_start..x_end {
         for y in y_start..y_end {
@@ -61,3 +132,4 @@ pub fn draw_spiral(xy: xy, color1: u16, color2: u16, mut stm: &mut stm) {
     }
     draw_rectangle(&yx, color, &mut stm);
 }
+
