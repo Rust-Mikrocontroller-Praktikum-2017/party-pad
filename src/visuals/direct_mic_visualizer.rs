@@ -25,7 +25,6 @@ impl<'a> vz::Visualizer for DirectMicVisualizer<'a> {
         if *self.current_pos + 2 * self.bar_width >= xy.x_max {
             *self.current_pos = 0;
             stm.lcd.clear_screen();
-            stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
         }
         //TODO
         let color_red: u16 = 0x7C00 | 0x8000; //red

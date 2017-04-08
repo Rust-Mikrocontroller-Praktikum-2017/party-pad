@@ -16,6 +16,8 @@ use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::default_visualizer::DefaultVisualizer;
 use visuals::visualizer::Visualizer;
 
+use visuals::draw;
+
 
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
@@ -29,6 +31,7 @@ fn main(mut stm: stm) -> ! {
     let mut current_visualizer = direct_mic_vz;
     let mut data0;
     let mut data1;
+    stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
         while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
         data0 = stm.sai_2.bdr.read().data();
@@ -37,6 +40,11 @@ fn main(mut stm: stm) -> ! {
 
         spectrum[0] = data0 as f32;
         current_visualizer.draw(&mut stm, spectrum);
+        /*
+        stm.lcd.clear_screen();
+        let radius = 40;
+        draw::draw_fill_circle(&mut stm, 240, 131, radius,240-radius,240+radius,131-radius,131+radius,0x7C00 | 0x8000 );
+        */
     }
 }
 
