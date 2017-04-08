@@ -21,31 +21,22 @@ fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
     let  mut spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
 
-    let direct_mic_vz: Box<Visualizer> = DirectMicVisualizer::new();
+    let mut pos = 0; //TODO move completely to direct mic? lifetime issues..
+    let direct_mic_vz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos, 2);
     let default_vz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
-    let current_visualizer = direct_mic_vz;
+    let mut current_visualizer = direct_mic_vz;
     let mut data0;
     let mut data1;
-    let bar_width = 2;
-    let mut pos = 0;
     loop {
         while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
         data0 = stm.sai_2.bdr.read().data();
         while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
         data1 = stm.sai_2.bdr.read().data();
-        spectrum[0] = data0 as f32;
-        spectrum[2] = pos as f32;
-        spectrum[1] = bar_width as f32;
-        if pos + 2 * bar_width >= 480 {
-            pos = 0;
-            stm.lcd.clear_screen();
-            stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
-        }
-        current_visualizer.draw(&mut stm, spectrum);
-        pos += bar_width;
 
+        spectrum[0] = data0 as f32;
+        current_visualizer.draw(&mut stm, spectrum);
     }
 }
 

@@ -12,7 +12,7 @@ pub struct DefaultVisualizer {
 }
 
 impl vz::Visualizer for DefaultVisualizer {
-    fn draw(&self, mut stm: &mut stm, spectrum: [f32; 16]) {
+    fn draw(& mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
         //draw something
         draw::draw_spiral(xy {
                               x_min: 0,
