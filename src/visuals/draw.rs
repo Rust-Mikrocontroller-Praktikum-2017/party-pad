@@ -3,13 +3,6 @@ use core;
 
 use stm32f7::system_clock;
 
-#[derive(Clone)]
-pub struct xy {
-    pub x_min: u16,
-    pub x_max: u16,
-    pub y_min: u16,
-    pub y_max: u16,
-}
 
 impl STM {
     pub fn blink_led(&mut self) -> usize {
@@ -154,14 +147,14 @@ impl STM {
         }
     }
 
-    pub fn draw_rectangle(&mut self, xy: &xy, color: u16) {
-        for x in xy.x_min..xy.x_max {
-            self.lcd.print_point_color_at(x, xy.y_min, color);
-            self.lcd.print_point_color_at(x, xy.y_max - 1, color);
+    pub fn draw_rectangle(&mut self, x_min: u16,x_max: u16, y_min: u16, y_max: u16, color: u16) {
+        for x in x_min..x_max {
+            self.lcd.print_point_color_at(x, y_min, color);
+            self.lcd.print_point_color_at(x, y_max - 1, color);
         }
-        for y in xy.y_min + 1..xy.y_max - 1 {
-            self.lcd.print_point_color_at(xy.x_min, y, color);
-            self.lcd.print_point_color_at(xy.x_max - 1, y, color);
+        for y in y_min + 1..y_max - 1 {
+            self.lcd.print_point_color_at(x_min, y, color);
+            self.lcd.print_point_color_at(x_max - 1, y, color);
         }
     }
 
@@ -179,25 +172,25 @@ impl STM {
         }
     }
 
-    pub fn draw_spiral(&mut self, xy: xy, color1: u16, color2: u16) {
-        let mut yx = xy.clone();
+    pub fn draw_spiral(&mut self, mut x_min: u16,mut x_max: u16, mut y_min: u16, mut y_max: u16, color1: u16, color2: u16) {
         let mut start_color = color1;
         let mut color = start_color;
 
-        while yx.y_min < 135 {
+        while y_min < 135 {
             // only works because 480 is dividable by 5
 
             for _ in 0..5 {
-                self.draw_rectangle(&yx, color);
+                self.draw_rectangle(x_min,x_max,y_min,y_max, color);
                 // update variables
-                yx.x_min += 1;
-                yx.x_max -= 1;
-                yx.y_min += 1;
-                yx.y_max -= 1;
+                x_min += 1;
+                x_max -= 1;
+                y_min += 1;
+                y_max -= 1;
             }
             color = if color == color1 { color2 } else { color1 }
         }
-        self.draw_rectangle(&yx, color);
+        self.draw_rectangle(x_min,x_max,y_min,y_max, color);
+
     }
 
 
@@ -234,6 +227,19 @@ impl STM {
 
         }
     }
+    /*pub fn draw_rectangle_strip(&mut self,
+                                x: u16,
+                                y: u16,
+                                width: u16,
+                                height: u16,
+                                color_low: u16,
+                                color_high: u16) {
+                                    
+        for  {
+            let color = 
+            self.draw_rectangle_filled(x,x+width,y,y+height,);
+        }
+    }*/
 }
 
 //TODO move to different file?

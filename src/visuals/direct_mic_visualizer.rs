@@ -2,7 +2,6 @@ use visuals::Visualizer;
 use collections::boxed::Box;
 use super::super::{STM, VizParameter};
 use visuals::constants::*;
-use visuals::draw::xy;
 
 pub struct DirectMicVisualizer<'a> {
     current_pos: &'a mut u16,
@@ -12,18 +11,12 @@ pub struct DirectMicVisualizer<'a> {
 impl<'a> Visualizer for DirectMicVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
         //draw something
-        let xy = xy {
-            x_min: X_MIN,
-            x_max: X_MAX,
-            y_min: Y_MIN,
-            y_max: Y_MAX,
-        };
         let data0 = param.spectrum[0] as i16;
-        if *self.current_pos + 2 * self.bar_width >= xy.x_max {
+        if *self.current_pos + 2 * self.bar_width >= X_MAX {
             *self.current_pos = 0;
             stm.lcd.clear_screen();
         }
-        stm.print_bar_signed(data0, *self.current_pos, self.bar_width, xy.y_max, RED);
+        stm.print_bar_signed(data0, *self.current_pos, self.bar_width, Y_MAX, RED);
         *self.current_pos += self.bar_width;
     }
 }

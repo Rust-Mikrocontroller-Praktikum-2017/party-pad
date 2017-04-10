@@ -1,7 +1,6 @@
 use collections::boxed::Box;
 use super::super::{STM, VizParameter};
-use visuals::constants as cons;
-use visuals::draw::xy;
+use visuals::constants::*;
 use visuals::Visualizer;
 use core;
 
@@ -13,12 +12,6 @@ pub struct EnergyVisualizer<'a> {
 impl<'a> Visualizer for EnergyVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
         //draw something
-        let xy = xy {
-            x_min: 0,
-            x_max: 480,
-            y_min: 0,
-            y_max: 272,
-        };
         let mut data0: u32 = 0;
         for i in 0..param.spectrum.len() {
             data0 += (param.spectrum[i] * param.spectrum[i]) as u32;
@@ -32,12 +25,12 @@ impl<'a> Visualizer for EnergyVisualizer<'a> {
         let vary_size = 60;
         stm.lcd.clear_screen();
         print_circle_vary_size(&mut stm,
-                               xy.x_max / 2,
-                               xy.y_max / 2,
+                               X_MAX / 2,
+                               Y_MAX / 2,
                                zero_size,
                                vary_size,
                                scale_factor,
-                               cons::RED);
+                               RED);
     }
 }
 impl<'a> EnergyVisualizer<'a> {
@@ -57,7 +50,7 @@ fn print_circle_vary_size(mut stm: &mut STM,
     //let value = (vary_size as f32 * scale_factor / 2.0) as u16;
     //let value = ((vary_size as u32 * value as u32) / ((core::u16::MAX as u32 * 2))) as u16;
     //let scale_factor = value as f32 / (core::u32::MAX as f32*3.0);
-    let value = core::cmp::min((cons::Y_MAX as f32 * scale_factor) as u16, 130);
+    let value = core::cmp::min((Y_MAX as f32 * scale_factor) as u16, 130);
 
 
     stm.draw_fill_circle(x_pos, y_pos, zero_size + value as u16, color);
