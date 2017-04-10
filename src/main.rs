@@ -11,14 +11,10 @@ use stm32f7::{system_clock, sdram, lcd, i2c, audio, touch, board, embedded};
 mod visuals;
 
 use collections::boxed::Box;
-use core::ptr;
 use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::default_visualizer::DefaultVisualizer;
 use visuals::energy_visualizer::EnergyVisualizer;
 use visuals::Visualizer;
-
-use visuals::draw;
-
 
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();

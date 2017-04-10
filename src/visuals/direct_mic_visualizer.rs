@@ -2,8 +2,7 @@ use visuals::Visualizer;
 use collections::boxed::Box;
 use super::super::stm;
 use visuals::constants::*;
-use visuals::draw::{self, xy};
-use stm32f7::lcd;
+use visuals::draw::xy;
 
 pub struct DirectMicVisualizer<'a> {
     current_pos: &'a mut u16,

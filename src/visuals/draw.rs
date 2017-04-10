@@ -19,7 +19,7 @@ impl stm {
         system_clock::ticks()
     }
 
-pub fn draw_fill_circle(stm: &mut stm,
+pub fn draw_fill_circle(&mut self,
                         x_center: u16,
                         y_center: u16,
                         radius: u16,

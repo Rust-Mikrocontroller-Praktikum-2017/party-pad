@@ -1,10 +1,8 @@
 use collections::boxed::Box;
 use super::super::stm;
 use visuals::constants as cons;
-use visuals::draw;
 use visuals::draw::xy;
 use visuals::Visualizer;
-use stm32f7::lcd;
 use core;
 
 
@@ -12,7 +10,7 @@ pub struct EnergyVisualizer<'a> {
     last_radius: &'a mut u16,
 }
 
-impl<'a> vz::Visualizer for EnergyVisualizer<'a> {
+impl<'a> Visualizer for EnergyVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
         //draw something
         let xy = xy {
@@ -34,7 +32,6 @@ impl<'a> vz::Visualizer for EnergyVisualizer<'a> {
         let vary_size = 60;
         stm.lcd.clear_screen();
         print_circle_vary_size(&mut stm,
-                               data0,
                                xy.x_max / 2,
                                xy.y_max / 2,
                                zero_size,
@@ -49,7 +46,6 @@ impl<'a> EnergyVisualizer<'a> {
     }
 }
 fn print_circle_vary_size(mut stm: &mut stm,
-                          value: u32,
                           x_pos: u16,
                           y_pos: u16,
                           zero_size: u16,
@@ -64,6 +60,6 @@ fn print_circle_vary_size(mut stm: &mut stm,
     let value = core::cmp::min((cons::Y_MAX as f32 * scale_factor) as u16, 130);
 
 
-    draw::draw_fill_circle(&mut stm, x_pos, y_pos, zero_size + value as u16, color);
+    stm.draw_fill_circle(x_pos, y_pos, zero_size + value as u16, color);
 }
 

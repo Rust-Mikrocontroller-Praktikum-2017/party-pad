@@ -2,7 +2,7 @@ use super::super::stm;
 use visuals::Visualizer;
 use collections::boxed::Box;
 use visuals::constants::*;
-use visuals::draw::{self, xy};
+use visuals::draw::xy;
 
 
 pub struct DefaultVisualizer {
