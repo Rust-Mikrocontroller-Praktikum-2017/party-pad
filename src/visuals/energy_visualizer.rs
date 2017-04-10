@@ -21,12 +21,14 @@ impl<'a> vz::Visualizer for EnergyVisualizer<'a> {
             y_min: 0,
             y_max: 272,
         };
-        let mut data0:u32 = 0;
+        let mut data0: u32 = 0;
         for i in 0..spectrum.len() {
             data0 += (spectrum[i] * spectrum[i]) as u32;
         }
-        let max_val = spectrum.len() as u32 * core::i16::MAX as u32 * core::i16::MAX as u32;
-        let scale_factor = data0 as f32 / max_val as f32;
+        //let max_val = spectrum.len() as u32 * core::i16::MAX as u32 * core::i16::MAX as u32;
+        //let scale_factor = data0 as f32 / spectrum.len() as f32 / core::i16::MAX as f32 /
+        //core::i16::MAX as f32;
+        let scale_factor = data0 as f32 / (core::i16::MAX as f32 * core::i16::MAX as f32) / spectrum.len() as f32;
 
         let zero_size = 0;
         let vary_size = 60;
@@ -59,13 +61,9 @@ fn print_circle_vary_size(mut stm: &mut stm,
     //let value = (vary_size as f32 * scale_factor / 2.0) as u16;
     //let value = ((vary_size as u32 * value as u32) / ((core::u16::MAX as u32 * 2))) as u16;
     //let scale_factor = value as f32 / (core::u32::MAX as f32*3.0);
-    let value = core::cmp::min((cons::Y_MAX as f32 / 2.0 * scale_factor) as u16, 130);
+    let value = core::cmp::min((cons::Y_MAX as f32 * scale_factor) as u16, 130);
 
 
-    draw::draw_fill_circle(&mut stm,
-                           x_pos,
-                           y_pos,
-                           zero_size + value as u16,
-                           color);
+    draw::draw_fill_circle(&mut stm, x_pos, y_pos, zero_size + value as u16, color);
 }
 
