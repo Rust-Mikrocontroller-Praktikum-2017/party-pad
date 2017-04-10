@@ -11,28 +11,32 @@ use stm32f7::{system_clock, sdram, lcd, i2c, audio, touch, board, embedded};
 mod visuals;
 
 use collections::boxed::Box;
-use visuals::constants as cons;
+use visuals::constants::*;
 use visuals::default_visualizer::DefaultVisualizer;
 use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::energy_visualizer::EnergyVisualizer;
 use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
+use visuals::sliding_sound_wave_vz::SlidingSoundVisualizer;
 use visuals::Visualizer;
 
 fn main(mut stm: STM) -> ! {
     stm.lcd.clear_screen();
     let mut param = VizParameter{spectrum: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                                    1.0, 1.0, 1.0, 1.0],
-                                   mic_input: [0;32]};
+                                   mic_input: [1000;32]};
 
-    let mut pos = 0; //TODO move completely to direct mic? lifetime issues..
+    let mut pos0 = 0; //TODO move completely to direct mic? lifetime issues..
     let mut pos1 = 0; 
+    let mut pos2 = 0;
     let mut last_radius = 0;
-    let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos, 2);
+    let mut buffer = [0;X_MAX as usize];
+    let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos0, 2);
     let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(&mut pos1, 2);
+    let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(&mut buffer, &mut pos2, 2);
     let default_viz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
-    let energy_viz: Box<Visualizer> = direct_mic_batch_viz;
+    let energy_viz: Box<Visualizer> = sliding_viz;
     let mut current_visualizer = energy_viz;
     let mut data0;
     let mut data1;
@@ -54,7 +58,8 @@ fn main(mut stm: STM) -> ! {
         }
         */
 
-        while count < param.mic_input.len() {
+        //while count < param.mic_input.len() {
+        while count < 1 {
             while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
             data0 = stm.sai_2.bdr.read().data();
             while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
@@ -66,7 +71,8 @@ fn main(mut stm: STM) -> ! {
         }
 
         current_visualizer.draw(&mut stm, &mut param);
-        
+                stm.lcd.clear_screen();
+
         /*
         stm.lcd.clear_screen();
         let radius = 0;
