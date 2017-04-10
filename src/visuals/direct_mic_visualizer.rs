@@ -1,42 +1,40 @@
-use visuals::visualizer as vz;
+use visuals::visualizer::Visualizer;
 use collections::boxed::Box;
 use super::super::stm;
-use visuals::draw;
-use visuals::draw::xy;
+use visuals::constants::*;
+use visuals::draw::{self,xy};
 use stm32f7::lcd;
 use core;
-use visuals::constants as cons;
 
 
 pub struct DirectMicVisualizer<'a> {
     current_pos: &'a mut u16,
     bar_width: u16,
 }
-impl<'a> vz::Visualizer for DirectMicVisualizer<'a> {
+
+impl<'a> Visualizer for DirectMicVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
         //draw something
         let xy = xy {
-            x_min: 0,
-            x_max: 480,
-            y_min: 0,
-            y_max: 272,
+            x_min: X_MIN,
+            x_max: X_MAX,
+            y_min: Y_MIN,
+            y_max: Y_MAX,
         };
         let data0 = spectrum[0] as i16;
         if *self.current_pos + 2 * self.bar_width >= xy.x_max {
             *self.current_pos = 0;
             stm.lcd.clear_screen();
         }
-        //TODO
-        let color_red: u16 = 0x7C00 | 0x8000; //red
         print_bar_signed(&mut stm,
                          data0,
                          *self.current_pos,
                          self.bar_width,
                          xy.y_max,
-                         color_red);
+                         RED);
         *self.current_pos += self.bar_width;
     }
-}   
+}
 impl<'a> DirectMicVisualizer<'a> {
     pub fn new(current_pos: &'a mut u16, bar_width: u16) -> Box<DirectMicVisualizer<'a>> {
         Box::new(DirectMicVisualizer {

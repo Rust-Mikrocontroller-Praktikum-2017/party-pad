@@ -1,8 +1,8 @@
+use super::super::stm;
 use visuals::visualizer as vz;
 use collections::boxed::Box;
-use super::super::stm;
+use visuals::constants::*;
 use visuals::draw;
-use visuals::constants::Color;
 use visuals::draw::xy;
 
 
@@ -15,10 +15,10 @@ impl vz::Visualizer for DefaultVisualizer {
     fn draw(& mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
         //draw something
         draw::draw_spiral(xy {
-                              x_min: 0,
-                              x_max: 480,
-                              y_min: 0,
-                              y_max: 272,
+                              x_min: X_MIN,
+                              x_max: X_MAX,
+                              y_min: Y_MIN,
+                              y_max: Y_MAX,
                           },
                           self.color1,
                           self.color2,
