@@ -1,11 +1,11 @@
-use visuals::visualizer as vz;
 use collections::boxed::Box;
 use super::super::stm;
+use visuals::constants as cons;
 use visuals::draw;
 use visuals::draw::xy;
+use visuals::Visualizer;
 use stm32f7::lcd;
 use core;
-use visuals::constants as cons;
 
 
 pub struct EnergyVisualizer<'a> {

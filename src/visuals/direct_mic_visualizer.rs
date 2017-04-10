@@ -1,11 +1,9 @@
-use visuals::visualizer::Visualizer;
+use visuals::Visualizer;
 use collections::boxed::Box;
 use super::super::stm;
 use visuals::constants::*;
-use visuals::draw::{self,xy};
+use visuals::draw::{self, xy};
 use stm32f7::lcd;
-use core;
-
 
 pub struct DirectMicVisualizer<'a> {
     current_pos: &'a mut u16,
@@ -26,12 +24,7 @@ impl<'a> Visualizer for DirectMicVisualizer<'a> {
             *self.current_pos = 0;
             stm.lcd.clear_screen();
         }
-        print_bar_signed(&mut stm,
-                         data0,
-                         *self.current_pos,
-                         self.bar_width,
-                         xy.y_max,
-                         RED);
+        stm.print_bar_signed(data0, *self.current_pos, self.bar_width, xy.y_max, RED);
         *self.current_pos += self.bar_width;
     }
 }
@@ -43,37 +36,3 @@ impl<'a> DirectMicVisualizer<'a> {
                  })
     }
 }
-fn print_bar_signed(mut stm: &mut stm, value: i16, pos: u16, width: u16, y_max: u16, color: u16) {
-    /*
-    let x_max = 480;
-    let y_max: u16 = 272;
-
-    assert!(pos < x_max);
-    assert!(pos + width < x_max);
-    */
-
-    //TODO how to scale properly?
-    let scale_factor = value as f32 * 10.0 / core::i16::MAX as f32;
-    //let scale_factor = value as f32 / core::i16::MAX as f32;
-    //TODO constants
-    let value = core::cmp::max(core::cmp::min((y_max as f32 * scale_factor) as i16, 130 as i16), -130 as i16);
-    //print_fill_rect(&mut lcd, pos, 20, pos+width, 20, 0x801F);
-
-    if value > 0 {
-        draw::print_fill_rect(&mut stm,
-                              pos,
-                              pos + width,
-                              y_max / 2,
-                              (y_max as i16 / 2 + value) as u16,
-                              color);
-    } else {
-        draw::print_fill_rect(&mut stm,
-                              pos,
-                              pos + width,
-                              (y_max as i16 / 2 + value) as u16,
-                              y_max / 2,
-                              color);
-
-    }
-}
-
