@@ -11,6 +11,7 @@ use stm32f7::{system_clock, sdram, lcd, i2c, audio, touch, board, embedded};
 mod visuals;
 
 use collections::boxed::Box;
+use visuals::constants as cons;
 use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::default_visualizer::DefaultVisualizer;
 use visuals::energy_visualizer::EnergyVisualizer;
@@ -39,12 +40,12 @@ fn main(mut stm: STM) -> ! {
         data1 = stm.sai_2.bdr.read().data();
 
         param.spectrum[0] = data0 as f32;
-        current_visualizer.draw(&mut stm, &mut param);
-        /*
+        //current_visualizer.draw(&mut stm, &mut param);
+        
         stm.lcd.clear_screen();
         let radius = 40;
-        stm.draw_fill_circle(&mut stm, 240, 131, radius,240-radius,240+radius,131-radius,131+radius,0x7C00 | 0x8000 );
-        */
+        stm.draw_fill_circle(240, 131, radius,cons::BLUE);
+        
     }
 }
 

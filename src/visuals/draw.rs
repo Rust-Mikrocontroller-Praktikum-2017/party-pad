@@ -1,4 +1,4 @@
-use super::super::{STM};
+use super::super::STM;
 use core;
 
 use stm32f7::system_clock;
@@ -19,24 +19,88 @@ impl STM {
         system_clock::ticks()
     }
 
-pub fn draw_fill_circle(&mut self,
-                        x_center: u16,
-                        y_center: u16,
-                        radius: u16,
-                        color: u16) {
-    /*
+    pub fn draw_circle(&mut self, x_center: u16, y_center: u16, radius: u16, color: u16) {
+        let mut x_offset = radius;
+        for y_offset in 0..radius {
+            while euclidean_dist_squared(x_center + x_offset,
+                                         y_center + y_offset,
+                                         x_center,
+                                         y_center) > radius * radius {
+                x_offset -= 1;
+            }
+            self.lcd
+                .print_point_color_at(x_center + x_offset, y_center + y_offset, color);
+            self.lcd
+                .print_point_color_at(x_center + x_offset, y_center - y_offset, color);
+            self.lcd
+                .print_point_color_at(x_center - x_offset, y_center + y_offset, color);
+            self.lcd
+                .print_point_color_at(x_center - x_offset, y_center - y_offset, color);
+
+        }
+    }
+
+    pub fn draw_fill_circle(&mut self, x_center: u16, y_center: u16, radius: u16, color: u16) {
+        /*
+        assert!(x_center + radius <= x_max && y_center + radius <= y_max);
+        assert!(x_center - radius <= x_max && y_center - radius <= y_max);
+        //assert!(is_legal_coord(x_center, y_center));
+        */
+
+        //self.lcd.print_point_color_at(x_center, y_center, color);
+        let mut x_offset = radius + 1;
+        for y_offset in 0..radius + 1 {
+            while euclidean_dist_squared(x_center + x_offset,
+                                         y_center + y_offset,
+                                         x_center,
+                                         y_center) > radius * radius {
+                x_offset -= 1;
+            }
+            self.draw_fill_rectangle(x_center - x_offset,
+                                 x_center + x_offset + 1,
+                                 y_center + y_offset,
+                                 y_center + y_offset + 1,
+                                 color);
+            self.draw_fill_rectangle(x_center - x_offset,
+                                 x_center + x_offset + 1,
+                                 y_center - y_offset,
+                                 y_center - y_offset + 1,
+                                 color);
+            self.lcd
+                .print_point_color_at(x_center + x_offset, y_center + y_offset, color);
+            self.lcd
+                .print_point_color_at(x_center + x_offset, y_center - y_offset, color);
+            self.lcd
+                .print_point_color_at(x_center - x_offset, y_center + y_offset, color);
+            self.lcd
+                .print_point_color_at(x_center - x_offset, y_center - y_offset, color);
+
+        }
+    }
+
+
+
+    pub fn draw_fill_ring(&mut self,
+                          x_center: u16,
+                          y_center: u16,
+                          radius_inner: u16,
+                          radius_outer: u16,
+                          color: u16) {
+        /*
     assert!(x_center + radius <= x_max && y_center + radius <= y_max);
     assert!(x_center - radius <= x_max && y_center - radius <= y_max);
     //assert!(is_legal_coord(x_center, y_center));
     */
         self.lcd.print_point_color_at(x_center, y_center, color);
-        let mut x_offset = 0;
-        for y_offset in 0..radius {
+        let mut x_offset;
+        for y_offset in 0..radius_outer {
             x_offset = 0;
             while euclidean_dist_squared(x_center + x_offset,
                                          y_center + y_offset,
                                          x_center,
-                                         y_center) < radius * radius {
+                                         y_center) < radius_outer * radius_outer
+            /*TODO*/
+            {
                 self.lcd
                     .print_point_color_at(x_center + x_offset, y_center + y_offset, color);
                 self.lcd
@@ -48,16 +112,6 @@ pub fn draw_fill_circle(&mut self,
                 x_offset += 1;
             }
         }
-        /*
-    for x in x_low_bound..x_high_bound {
-        for y in y_low_bound..y_high_bound {
-            if euclidean_dist_squared(x, y, x_center, y_center) < radius * radius {
-                stm.lcd.print_point_color_at(x, y, color);
-            } else {
-                stm.lcd.print_point_color_at(x, y, 0x8000);
-            }
-        }
-    }*/
     }
 
     pub fn draw_rectangle(&mut self, xy: &xy, color: u16) {
@@ -71,7 +125,7 @@ pub fn draw_fill_circle(&mut self,
         }
     }
 
-    pub fn print_fill_rect(&mut self,
+    pub fn draw_fill_rectangle(&mut self,
                            x_start: u16,
                            x_end: u16,
                            y_start: u16,
@@ -126,13 +180,13 @@ pub fn draw_fill_circle(&mut self,
         //print_fill_rect(&mut lcd, pos, 20, pos+width, 20, 0x801F);
 
         if value > 0 {
-            self.print_fill_rect(pos,
+            self.draw_fill_rectangle(pos,
                                  pos + width,
                                  y_max / 2,
                                  (y_max as i16 / 2 + value) as u16,
                                  color);
         } else {
-            self.print_fill_rect(pos,
+            self.draw_fill_rectangle(pos,
                                  pos + width,
                                  (y_max as i16 / 2 + value) as u16,
                                  y_max / 2,
@@ -166,3 +220,4 @@ fn euclidean_dist_squared(x_1: u16, y_1: u16, x_2: u16, y_2: u16) -> u16 {
     y_high - y_low;
     (x_high - x_low) * (x_high - x_low) + (y_high - y_low) * (y_high - y_low)
 }
+
