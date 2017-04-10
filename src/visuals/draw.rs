@@ -3,13 +3,6 @@ use core;
 
 use stm32f7::system_clock;
 
-#[derive(Clone)]
-pub struct xy {
-    pub x_min: u16,
-    pub x_max: u16,
-    pub y_min: u16,
-    pub y_max: u16,
-}
 
 impl STM {
     pub fn blink_led(&mut self) -> usize {
@@ -40,7 +33,7 @@ impl STM {
         }
     }
 
-    pub fn draw_fill_circle(&mut self, x_center: u16, y_center: u16, radius: u16, color: u16) {
+    pub fn draw_circle_filled(&mut self, x_center: u16, y_center: u16, radius: u16, color: u16) {
         /*
         assert!(x_center + radius <= x_max && y_center + radius <= y_max);
         assert!(x_center - radius <= x_max && y_center - radius <= y_max);
@@ -56,12 +49,12 @@ impl STM {
                                          y_center) > radius * radius {
                 x_offset -= 1;
             }
-            self.draw_fill_rectangle(x_center - x_offset,
+            self.draw_rectangle_filled(x_center - x_offset,
                                      x_center + x_offset + 1,
                                      y_center + y_offset,
                                      y_center + y_offset + 1,
                                      color);
-            self.draw_fill_rectangle(x_center - x_offset,
+            self.draw_rectangle_filled(x_center - x_offset,
                                      x_center + x_offset + 1,
                                      y_center - y_offset,
                                      y_center - y_offset + 1,
@@ -82,7 +75,7 @@ impl STM {
 
 
 
-    pub fn draw_fill_ring(&mut self,
+    pub fn draw_ring_filled(&mut self,
                           x_center: u16,
                           y_center: u16,
                           radius_inner: u16,
@@ -116,32 +109,32 @@ impl STM {
                     x_offset_inner -= 1;
                 }
                 //lower right quarter
-                self.draw_line(x_center + x_offset_inner,
+                self.draw_line_h(x_center + x_offset_inner,
                                          x_center + x_offset_outer + 1,
                                          y_center + y_offset,
                                          color);
                 //lower left quarter
-                self.draw_line(x_center - x_offset_outer,
+                self.draw_line_h(x_center - x_offset_outer,
                                          x_center - x_offset_inner + 1,
                                          y_center + y_offset,
                                          color);
                 //upper left quarter
-                self.draw_line(x_center - x_offset_outer,
+                self.draw_line_h(x_center - x_offset_outer,
                                          x_center - x_offset_inner + 1,
                                          y_center - y_offset,
                                          color);
                 //upper right quarter
-                self.draw_line(x_center + x_offset_inner,
+                self.draw_line_h(x_center + x_offset_inner,
                                          x_center + x_offset_outer + 1,
                                          y_center - y_offset,
                                          color);
             } else {
                 //if inner circle is not intersected, draw line between outer circle points
-                self.draw_line(x_center - x_offset_outer,
+                self.draw_line_h(x_center - x_offset_outer,
                                          x_center + x_offset_outer + 1,
                                          y_center - y_offset,
                                          color);
-                self.draw_line(x_center - x_offset_outer,
+                self.draw_line_h(x_center - x_offset_outer,
                                          x_center + x_offset_outer + 1,
                                          y_center + y_offset,
                                          color);
@@ -150,56 +143,62 @@ impl STM {
         }
     }
 
-    pub fn draw_line(&mut self, x_start: u16, x_end: u16, y: u16, color: u16) {
-        for x in x_start..x_end {
-            self.lcd.print_point_color_at(x as u16, y, color);
+    pub fn draw_line_h(&mut self, x_min: u16, x_max: u16, y: u16, color: u16) {
+        for x in x_min..x_max {
+            self.lcd.print_point_color_at(x, y, color);
         }
     }
 
-    pub fn draw_rectangle(&mut self, xy: &xy, color: u16) {
-        for x in xy.x_min..xy.x_max {
-            self.lcd.print_point_color_at(x, xy.y_min, color);
-            self.lcd.print_point_color_at(x, xy.y_max - 1, color);
+    pub fn draw_line_v(&mut self, x: u16, y_min: u16, y_max: u16,  color: u16) {
+        for y in y_min..y_max {
+            self.lcd.print_point_color_at(x, y, color);
         }
-        for y in xy.y_min + 1..xy.y_max - 1 {
-            self.lcd.print_point_color_at(xy.x_min, y, color);
-            self.lcd.print_point_color_at(xy.x_max - 1, y, color);
+    }
+    
+    pub fn draw_rectangle(&mut self, x_min: u16,x_max: u16, y_min: u16, y_max: u16, color: u16) {
+        for x in x_min..x_max {
+            self.lcd.print_point_color_at(x, y_min, color);
+            self.lcd.print_point_color_at(x, y_max - 1, color);
+        }
+        for y in y_min + 1..y_max - 1 {
+            self.lcd.print_point_color_at(x_min, y, color);
+            self.lcd.print_point_color_at(x_max - 1, y, color);
         }
     }
 
-    pub fn draw_fill_rectangle(&mut self,
-                               x_start: u16,
-                               x_end: u16,
-                               y_start: u16,
-                               y_end: u16,
+    pub fn draw_rectangle_filled(&mut self,
+                               x_min: u16,
+                               x_max: u16,
+                               y_min: u16,
+                               y_max: u16,
                                color: u16) {
 
-        for x in x_start..x_end {
-            for y in y_start..y_end {
+        for x in x_min..x_max {
+            for y in y_min..y_max {
                 self.lcd.print_point_color_at(x as u16, y as u16, color);
             }
         }
     }
 
-    pub fn draw_spiral(&mut self, xy: xy, color1: u16, color2: u16) {
-        let mut yx = xy.clone();
+    pub fn draw_spiral(&mut self, mut x_min: u16,mut x_max: u16, mut y_min: u16, mut y_max: u16, color1: u16, color2: u16) {
         let mut start_color = color1;
         let mut color = start_color;
 
-        while yx.y_min < 135 {
+        while y_min < 135 {
             // only works because 480 is dividable by 5
 
             for _ in 0..5 {
-                self.draw_rectangle(&yx, color);
+                self.draw_rectangle(x_min,x_max,y_min,y_max, color);
                 // update variables
-                yx.x_min += 1;
-                yx.x_max -= 1;
-                yx.y_min += 1;
-                yx.y_max -= 1;
+                x_min += 1;
+                x_max -= 1;
+                y_min += 1;
+                y_max -= 1;
             }
             color = if color == color1 { color2 } else { color1 }
         }
-        self.draw_rectangle(&yx, color);
+        self.draw_rectangle(x_min,x_max,y_min,y_max, color);
+
     }
 
 
@@ -222,13 +221,13 @@ impl STM {
         //print_fill_rect(&mut lcd, pos, 20, pos+width, 20, 0x801F);
 
         if value > 0 {
-            self.draw_fill_rectangle(pos,
+            self.draw_rectangle_filled(pos,
                                      pos + width,
                                      y_max / 2,
                                      (y_max as i16 / 2 + value) as u16,
                                      color);
         } else {
-            self.draw_fill_rectangle(pos,
+            self.draw_rectangle_filled(pos,
                                      pos + width,
                                      (y_max as i16 / 2 + value) as u16,
                                      y_max / 2,
@@ -236,6 +235,19 @@ impl STM {
 
         }
     }
+    /*pub fn draw_rectangle_strip(&mut self,
+                                x: u16,
+                                y: u16,
+                                width: u16,
+                                height: u16,
+                                color_low: u16,
+                                color_high: u16) {
+                                    
+        for  {
+            let color = 
+            self.draw_rectangle_filled(x,x+width,y,y+height,);
+        }
+    }*/
 }
 
 //TODO move to different file?

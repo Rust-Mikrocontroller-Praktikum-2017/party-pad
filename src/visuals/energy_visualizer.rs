@@ -1,7 +1,6 @@
 use collections::boxed::Box;
 use super::super::{STM, VizParameter};
-use visuals::constants as cons;
-use visuals::draw::xy;
+use visuals::constants::*;
 use visuals::Visualizer;
 use core;
 
@@ -13,16 +12,9 @@ pub struct EnergyVisualizer<'a> {
 impl<'a> Visualizer for EnergyVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
         //draw something
-        let xy = xy {
-            x_min: 0,
-            x_max: 480,
-            y_min: 0,
-            y_max: 272,
-        };
-        let mut data0: f32 = 0.0;
-        for i in 0..param.mic_input.len() {
-            data0 += ((param.mic_input[i] as f32) *
-                      (param.mic_input[i] as f32)) ;
+        let mut data0: u32 = 0;
+        for i in 0..param.spectrum.len() {
+            data0 += (param.spectrum[i] * param.spectrum[i]) as u32;
         }
         //let max_val = spectrum.len() as u32 * core::i16::MAX as u32 * core::i16::MAX as u32;
         //let scale_factor = data0 as f32 / spectrum.len() as f32 / core::i16::MAX as f32 /
@@ -41,7 +33,7 @@ impl<'a> Visualizer for EnergyVisualizer<'a> {
                                zero_size,
                                vary_size,
                                scale_factor,
-                               cons::RED);
+                               RED);
     }
 }
 impl<'a> EnergyVisualizer<'a> {
