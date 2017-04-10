@@ -36,8 +36,8 @@ fn main(mut stm: STM) -> ! {
     let default_viz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
-    let energy_viz: Box<Visualizer> = sliding_viz;
-    let mut current_visualizer = energy_viz;
+    let energy_viz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
+    let mut current_visualizer = direct_mic_viz;
     let mut data0;
     let mut data1;
     let mut count;
@@ -66,12 +66,14 @@ fn main(mut stm: STM) -> ! {
             data1 = stm.sai_2.bdr.read().data();
 
             param.mic_input[count] = data0 as i16;
+            param.spectrum[count] = data0 as f32;
 
             count += 1;
         }
 
         current_visualizer.draw(&mut stm, &mut param);
-w
+        //        stm.lcd.clear_screen();
+
         /*
         stm.lcd.clear_screen();
         let radius = 0;
