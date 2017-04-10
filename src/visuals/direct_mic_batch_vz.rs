@@ -1,6 +1,6 @@
 use visuals::Visualizer;
 use collections::boxed::Box;
-use super::super::stm;
+use super::super::{STM,VizParameter};
 use visuals::draw::{self,xy};
 use stm32f7::lcd;
 use visuals::constants as cons;
@@ -11,7 +11,7 @@ pub struct DirectMicVisualizer<'a> {
     bar_width: u16,
 }
 impl<'a> Visualizer for DirectMicVisualizer<'a> {
-    fn draw(&mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
+    fn draw(&mut self, mut stm: &mut STM, param : &mut VizParameter) {
         //draw something
         let xy = xy {
             x_min: 0,

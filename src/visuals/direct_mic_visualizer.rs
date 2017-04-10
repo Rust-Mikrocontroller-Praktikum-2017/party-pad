@@ -1,6 +1,6 @@
 use visuals::Visualizer;
 use collections::boxed::Box;
-use super::super::stm;
+use super::super::{STM, VizParameter};
 use visuals::constants::*;
 use visuals::draw::xy;
 
@@ -10,7 +10,7 @@ pub struct DirectMicVisualizer<'a> {
 }
 
 impl<'a> Visualizer for DirectMicVisualizer<'a> {
-    fn draw(&mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
+    fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
         //draw something
         let xy = xy {
             x_min: X_MIN,
@@ -18,7 +18,7 @@ impl<'a> Visualizer for DirectMicVisualizer<'a> {
             y_min: Y_MIN,
             y_max: Y_MAX,
         };
-        let data0 = spectrum[0] as i16;
+        let data0 = param.spectrum[0] as i16;
         if *self.current_pos + 2 * self.bar_width >= xy.x_max {
             *self.current_pos = 0;
             stm.lcd.clear_screen();

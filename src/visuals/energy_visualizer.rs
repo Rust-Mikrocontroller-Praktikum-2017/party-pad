@@ -1,5 +1,5 @@
 use collections::boxed::Box;
-use super::super::stm;
+use super::super::{STM, VizParameter};
 use visuals::constants as cons;
 use visuals::draw::xy;
 use visuals::Visualizer;
@@ -11,7 +11,7 @@ pub struct EnergyVisualizer<'a> {
 }
 
 impl<'a> Visualizer for EnergyVisualizer<'a> {
-    fn draw(&mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
+    fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
         //draw something
         let xy = xy {
             x_min: 0,
@@ -20,13 +20,13 @@ impl<'a> Visualizer for EnergyVisualizer<'a> {
             y_max: 272,
         };
         let mut data0: u32 = 0;
-        for i in 0..spectrum.len() {
-            data0 += (spectrum[i] * spectrum[i]) as u32;
+        for i in 0..param.spectrum.len() {
+            data0 += (param.spectrum[i] * param.spectrum[i]) as u32;
         }
         //let max_val = spectrum.len() as u32 * core::i16::MAX as u32 * core::i16::MAX as u32;
         //let scale_factor = data0 as f32 / spectrum.len() as f32 / core::i16::MAX as f32 /
         //core::i16::MAX as f32;
-        let scale_factor = data0 as f32 / (core::i16::MAX as f32 * core::i16::MAX as f32) / spectrum.len() as f32;
+        let scale_factor = data0 as f32 / (core::i16::MAX as f32 * core::i16::MAX as f32) / param.spectrum.len() as f32;
 
         let zero_size = 0;
         let vary_size = 60;
@@ -45,7 +45,7 @@ impl<'a> EnergyVisualizer<'a> {
         Box::new(EnergyVisualizer { last_radius: last_radius })
     }
 }
-fn print_circle_vary_size(mut stm: &mut stm,
+fn print_circle_vary_size(mut stm: &mut STM,
                           x_pos: u16,
                           y_pos: u16,
                           zero_size: u16,

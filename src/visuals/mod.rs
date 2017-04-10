@@ -4,8 +4,8 @@ pub mod direct_mic_visualizer;
 pub mod energy_visualizer;
 pub mod draw;
 
-use super::stm;
+use super::{STM,VizParameter};
 
 pub trait Visualizer {
-    fn draw(&mut self, stm: &mut stm, spectrum: [f32; 16]);
+    fn draw(&mut self, stm: &mut STM, param: &mut VizParameter);
 }

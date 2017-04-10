@@ -16,10 +16,10 @@ use visuals::default_visualizer::DefaultVisualizer;
 use visuals::energy_visualizer::EnergyVisualizer;
 use visuals::Visualizer;
 
-fn main(mut stm: stm) -> ! {
+fn main(mut stm: STM) -> ! {
     stm.lcd.clear_screen();
-    let mut spectrum: [f32; 16] = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-                                   1.0, 1.0, 1.0, 1.0];
+    let mut param = VizParameter{spectrum: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                                   1.0, 1.0, 1.0, 1.0]};
 
     let mut pos = 0; //TODO move completely to direct mic? lifetime issues..
     let mut last_radius = 0;
@@ -38,8 +38,8 @@ fn main(mut stm: stm) -> ! {
         while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
         data1 = stm.sai_2.bdr.read().data();
 
-        spectrum[0] = data0 as f32;
-        current_visualizer.draw(&mut stm, spectrum);
+        param.spectrum[0] = data0 as f32;
+        current_visualizer.draw(&mut stm, &mut param);
         /*
         stm.lcd.clear_screen();
         let radius = 40;
@@ -48,12 +48,17 @@ fn main(mut stm: stm) -> ! {
     }
 }
 
-pub struct stm {
+pub struct STM {
     gpio: embedded::interfaces::gpio::Gpio,
     i2c_3: i2c::I2C,
     lcd: stm32f7::lcd::Lcd,
     led: embedded::interfaces::gpio::OutputPin,
     sai_2: &'static mut board::sai::Sai,
+
+}
+
+pub struct VizParameter {
+    spectrum: [f32; 16]
 }
 
 #[no_mangle]
@@ -87,7 +92,7 @@ pub unsafe extern "C" fn reset() -> ! {
     main(stm);
 }
 
-fn init(hw: board::Hardware) -> stm {
+fn init(hw: board::Hardware) -> STM {
     let board::Hardware {
         rcc,
         pwr,
@@ -169,7 +174,7 @@ fn init(hw: board::Hardware) -> stm {
     audio::init_sai_2(sai_2, rcc);
     assert!(audio::init_wm8994(&mut i2c_3).is_ok());
 
-    stm {
+    STM {
         gpio: gpio,
         i2c_3: i2c_3,
         lcd: lcd,

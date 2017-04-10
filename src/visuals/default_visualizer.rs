@@ -1,4 +1,4 @@
-use super::super::stm;
+use super::super::{STM, VizParameter};
 use visuals::Visualizer;
 use collections::boxed::Box;
 use visuals::constants::*;
@@ -11,7 +11,7 @@ pub struct DefaultVisualizer {
 }
 
 impl Visualizer for DefaultVisualizer {
-    fn draw(&mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
+    fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
         //draw something
         stm.draw_spiral(xy {
                             x_min: X_MIN,
@@ -32,3 +32,4 @@ impl DefaultVisualizer {
                  })
     }
 }
+

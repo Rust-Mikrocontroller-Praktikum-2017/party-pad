@@ -1,4 +1,4 @@
-use super::super::stm;
+use super::super::{STM};
 use core;
 
 use stm32f7::system_clock;
@@ -11,7 +11,7 @@ pub struct xy {
     pub y_max: u16,
 }
 
-impl stm {
+impl STM {
     pub fn blink_led(&mut self) -> usize {
         // toggle the led
         let led_current = self.led.get();
