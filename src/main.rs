@@ -14,6 +14,7 @@ use collections::boxed::Box;
 use core::ptr;
 use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::default_visualizer::DefaultVisualizer;
+use visuals::energy_visualizer::EnergyVisualizer;
 use visuals::visualizer::Visualizer;
 
 use visuals::draw;
@@ -24,11 +25,13 @@ fn main(mut stm: stm) -> ! {
     let  mut spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
 
     let mut pos = 0; //TODO move completely to direct mic? lifetime issues..
+    let mut last_radius = 0;
     let direct_mic_vz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos, 2);
     let default_vz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
-    let mut current_visualizer = direct_mic_vz;
+    let energy_vz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
+    let mut current_visualizer = energy_vz;
     let mut data0;
     let mut data1;
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));

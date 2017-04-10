@@ -20,14 +20,8 @@ pub fn draw_fill_circle(stm: &mut stm,
                         x_center: u16,
                         y_center: u16,
                         radius: u16,
-                        x_low_bound: u16,
-                        x_high_bound: u16,
-                        y_low_bound: u16,
-                        y_high_bound: u16,
                         color: u16) {
     /*
-    let x_max = 480;
-    let y_max = 272;
     assert!(x_center + radius <= x_max && y_center + radius <= y_max);
     assert!(x_center - radius <= x_max && y_center - radius <= y_max);
     //assert!(is_legal_coord(x_center, y_center));
