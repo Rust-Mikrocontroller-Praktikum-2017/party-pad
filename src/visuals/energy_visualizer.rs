@@ -53,6 +53,6 @@ fn print_circle_vary_size(mut stm: &mut STM,
     let value = core::cmp::min((Y_MAX as f32 * scale_factor) as u16, 130);
 
 
-    stm.draw_fill_circle(x_pos, y_pos, zero_size + value as u16, color);
+    stm.draw_circle_filled(x_pos, y_pos, zero_size + value as u16, color);
 }
 

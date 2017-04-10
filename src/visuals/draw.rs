@@ -33,7 +33,7 @@ impl STM {
         }
     }
 
-    pub fn draw_fill_circle(&mut self, x_center: u16, y_center: u16, radius: u16, color: u16) {
+    pub fn draw_circle_filled(&mut self, x_center: u16, y_center: u16, radius: u16, color: u16) {
         /*
         assert!(x_center + radius <= x_max && y_center + radius <= y_max);
         assert!(x_center - radius <= x_max && y_center - radius <= y_max);
@@ -49,12 +49,12 @@ impl STM {
                                          y_center) > radius * radius {
                 x_offset -= 1;
             }
-            self.draw_fill_rectangle(x_center - x_offset,
+            self.draw_rectangle_filled(x_center - x_offset,
                                      x_center + x_offset + 1,
                                      y_center + y_offset,
                                      y_center + y_offset + 1,
                                      color);
-            self.draw_fill_rectangle(x_center - x_offset,
+            self.draw_rectangle_filled(x_center - x_offset,
                                      x_center + x_offset + 1,
                                      y_center - y_offset,
                                      y_center - y_offset + 1,
@@ -75,7 +75,7 @@ impl STM {
 
 
 
-    pub fn draw_fill_ring(&mut self,
+    pub fn draw_ring_filled(&mut self,
                           x_center: u16,
                           y_center: u16,
                           radius_inner: u16,
@@ -107,32 +107,32 @@ impl STM {
                     x_offset_inner -= 1;
                 }
                 //lower right quarter
-                self.draw_line(x_center + x_offset_inner,
+                self.draw_line_h(x_center + x_offset_inner,
                                          x_center + x_offset_outer + 1,
                                          y_center + y_offset,
                                          color);
                 //lower left quarter
-                self.draw_line(x_center - x_offset_outer,
+                self.draw_line_h(x_center - x_offset_outer,
                                          x_center - x_offset_inner + 1,
                                          y_center + y_offset,
                                          color);
                 //upper left quarter
-                self.draw_line(x_center - x_offset_outer,
+                self.draw_line_h(x_center - x_offset_outer,
                                          x_center - x_offset_inner + 1,
                                          y_center - y_offset,
                                          color);
                 //upper right quarter
-                self.draw_line(x_center + x_offset_inner,
+                self.draw_line_h(x_center + x_offset_inner,
                                          x_center + x_offset_outer + 1,
                                          y_center - y_offset,
                                          color);
             } else {
                 //if inner circle is not intersected, draw line between outer circle points
-                self.draw_line(x_center - x_offset_outer,
+                self.draw_line_h(x_center - x_offset_outer,
                                          x_center + x_offset_outer + 1,
                                          y_center - y_offset,
                                          color);
-                self.draw_line(x_center - x_offset_outer,
+                self.draw_line_h(x_center - x_offset_outer,
                                          x_center + x_offset_outer + 1,
                                          y_center + y_offset,
                                          color);
@@ -141,12 +141,18 @@ impl STM {
         }
     }
 
-    pub fn draw_line(&mut self, x_start: u16, x_end: u16, y: u16, color: u16) {
-        for x in x_start..x_end {
-            self.lcd.print_point_color_at(x as u16, y, color);
+    pub fn draw_line_h(&mut self, x_min: u16, x_max: u16, y: u16, color: u16) {
+        for x in x_min..x_max {
+            self.lcd.print_point_color_at(x, y, color);
         }
     }
 
+    pub fn draw_line_v(&mut self, x: u16, y_min: u16, y_max: u16,  color: u16) {
+        for y in y_min..y_max {
+            self.lcd.print_point_color_at(x, y, color);
+        }
+    }
+    
     pub fn draw_rectangle(&mut self, x_min: u16,x_max: u16, y_min: u16, y_max: u16, color: u16) {
         for x in x_min..x_max {
             self.lcd.print_point_color_at(x, y_min, color);
@@ -158,15 +164,15 @@ impl STM {
         }
     }
 
-    pub fn draw_fill_rectangle(&mut self,
-                               x_start: u16,
-                               x_end: u16,
-                               y_start: u16,
-                               y_end: u16,
+    pub fn draw_rectangle_filled(&mut self,
+                               x_min: u16,
+                               x_max: u16,
+                               y_min: u16,
+                               y_max: u16,
                                color: u16) {
 
-        for x in x_start..x_end {
-            for y in y_start..y_end {
+        for x in x_min..x_max {
+            for y in y_min..y_max {
                 self.lcd.print_point_color_at(x as u16, y as u16, color);
             }
         }
@@ -213,13 +219,13 @@ impl STM {
         //print_fill_rect(&mut lcd, pos, 20, pos+width, 20, 0x801F);
 
         if value > 0 {
-            self.draw_fill_rectangle(pos,
+            self.draw_rectangle_filled(pos,
                                      pos + width,
                                      y_max / 2,
                                      (y_max as i16 / 2 + value) as u16,
                                      color);
         } else {
-            self.draw_fill_rectangle(pos,
+            self.draw_rectangle_filled(pos,
                                      pos + width,
                                      (y_max as i16 / 2 + value) as u16,
                                      y_max / 2,
