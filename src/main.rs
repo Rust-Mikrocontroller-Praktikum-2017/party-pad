@@ -12,9 +12,10 @@ mod visuals;
 
 use collections::boxed::Box;
 use visuals::constants as cons;
-use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::default_visualizer::DefaultVisualizer;
+use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::energy_visualizer::EnergyVisualizer;
+use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
 use visuals::Visualizer;
 
 fn main(mut stm: STM) -> ! {
@@ -24,12 +25,14 @@ fn main(mut stm: STM) -> ! {
                                    mic_input: [0;32]};
 
     let mut pos = 0; //TODO move completely to direct mic? lifetime issues..
+    let mut pos1 = 0; 
     let mut last_radius = 0;
     let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos, 2);
+    let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(&mut pos1, 2);
     let default_viz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
-    let energy_viz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
+    let energy_viz: Box<Visualizer> = direct_mic_batch_viz;
     let mut current_visualizer = energy_viz;
     let mut data0;
     let mut data1;
@@ -37,6 +40,7 @@ fn main(mut stm: STM) -> ! {
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
         count = 0;
+        /*
         while count + 1 < param.mic_input.len() {
             while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
             data0 = stm.sai_2.bdr.read().data();
@@ -47,6 +51,18 @@ fn main(mut stm: STM) -> ! {
             param.mic_input[count+1] = data1 as i16;
 
             count += 2;
+        }
+        */
+
+        while count < param.mic_input.len() {
+            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+            data0 = stm.sai_2.bdr.read().data();
+            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+            data1 = stm.sai_2.bdr.read().data();
+
+            param.mic_input[count] = data0 as i16;
+
+            count += 1;
         }
 
         current_visualizer.draw(&mut stm, &mut param);
@@ -71,7 +87,7 @@ pub struct STM {
 
 pub struct VizParameter {
     spectrum: [f32; 16],
-    mic_input: [i16; 32]
+    mic_input: [i16; 32],
 }
 
 #[no_mangle]

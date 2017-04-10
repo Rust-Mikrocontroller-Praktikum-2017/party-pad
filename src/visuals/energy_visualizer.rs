@@ -28,8 +28,8 @@ impl<'a> Visualizer for EnergyVisualizer<'a> {
         //stm.lcd.clear_screen();
         print_circle_vary_size(&mut stm,
                                &mut self.last_radius,
-                               xy.x_max / 2,
-                               xy.y_max / 2,
+                               X_MAX / 2,
+                               Y_MAX / 2,
                                zero_size,
                                vary_size,
                                scale_factor,
@@ -58,11 +58,11 @@ fn print_circle_vary_size(mut stm: &mut STM,
     let new_radius: u16 = zero_size + value;
 
     if *last_radius > new_radius {
-        stm.draw_fill_ring(x_pos, y_pos, new_radius, *last_radius, cons::BLACK);
+        stm.draw_ring_filled(x_pos, y_pos, new_radius, *last_radius, BLACK);
     } else
     /* if *last_radius < new_radius */
     {
-        stm.draw_fill_ring(x_pos, y_pos, *last_radius, new_radius, color);
+        stm.draw_ring_filled(x_pos, y_pos, *last_radius, new_radius, color);
     }
     //stm.draw_fill_circle(x_pos, y_pos, zero_size + value as u16, color);
     *last_radius = new_radius;
