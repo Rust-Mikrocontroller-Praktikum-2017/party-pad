@@ -44,7 +44,7 @@ fn main(mut stm: STM) -> ! {
         
         stm.lcd.clear_screen();
         let radius = 40;
-        stm.draw_fill_circle(240, 131, radius,cons::BLUE);
+        stm.draw_fill_ring(240, 131, radius,radius + 20,cons::BLUE);
         
     }
 }

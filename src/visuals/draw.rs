@@ -57,15 +57,16 @@ impl STM {
                 x_offset -= 1;
             }
             self.draw_fill_rectangle(x_center - x_offset,
-                                 x_center + x_offset + 1,
-                                 y_center + y_offset,
-                                 y_center + y_offset + 1,
-                                 color);
+                                     x_center + x_offset + 1,
+                                     y_center + y_offset,
+                                     y_center + y_offset + 1,
+                                     color);
             self.draw_fill_rectangle(x_center - x_offset,
-                                 x_center + x_offset + 1,
-                                 y_center - y_offset,
-                                 y_center - y_offset + 1,
-                                 color);
+                                     x_center + x_offset + 1,
+                                     y_center - y_offset,
+                                     y_center - y_offset + 1,
+                                     color);
+            /*
             self.lcd
                 .print_point_color_at(x_center + x_offset, y_center + y_offset, color);
             self.lcd
@@ -74,6 +75,7 @@ impl STM {
                 .print_point_color_at(x_center - x_offset, y_center + y_offset, color);
             self.lcd
                 .print_point_color_at(x_center - x_offset, y_center - y_offset, color);
+            */
 
         }
     }
@@ -86,31 +88,69 @@ impl STM {
                           radius_inner: u16,
                           radius_outer: u16,
                           color: u16) {
-        /*
-    assert!(x_center + radius <= x_max && y_center + radius <= y_max);
-    assert!(x_center - radius <= x_max && y_center - radius <= y_max);
-    //assert!(is_legal_coord(x_center, y_center));
-    */
-        self.lcd.print_point_color_at(x_center, y_center, color);
-        let mut x_offset;
-        for y_offset in 0..radius_outer {
-            x_offset = 0;
-            while euclidean_dist_squared(x_center + x_offset,
+        assert!(radius_outer > radius_inner);
+
+        let radius_outer_squared = radius_outer * radius_outer;
+        let radius_inner_squared = radius_inner * radius_inner;
+        let mut x_offset_outer = radius_outer + 1;
+        let mut x_offset_inner;
+        //for every horizontal line, draw line between outer and inner circle
+        for y_offset in 0..radius_outer + 1 {
+            //compute outer circle point
+            while euclidean_dist_squared(x_center + x_offset_outer,
                                          y_center + y_offset,
                                          x_center,
-                                         y_center) < radius_outer * radius_outer
-            /*TODO*/
-            {
-                self.lcd
-                    .print_point_color_at(x_center + x_offset, y_center + y_offset, color);
-                self.lcd
-                    .print_point_color_at(x_center + x_offset, y_center - y_offset, color);
-                self.lcd
-                    .print_point_color_at(x_center - x_offset, y_center + y_offset, color);
-                self.lcd
-                    .print_point_color_at(x_center - x_offset, y_center - y_offset, color);
-                x_offset += 1;
+                                         y_center) > radius_outer_squared {
+                x_offset_outer -= 1;
             }
+            //if inner circle is intersected, compute inner circle point
+            if y_offset < radius_inner {
+                x_offset_inner = x_offset_outer;
+                while euclidean_dist_squared(x_center + x_offset_inner,
+                                             y_center + y_offset,
+                                             x_center,
+                                             y_center) >
+                      radius_inner_squared {
+                    x_offset_inner -= 1;
+                }
+                //lower right quarter
+                self.draw_line(x_center + x_offset_inner,
+                                         x_center + x_offset_outer + 1,
+                                         y_center + y_offset,
+                                         color);
+                //lower left quarter
+                self.draw_line(x_center - x_offset_outer,
+                                         x_center - x_offset_inner + 1,
+                                         y_center + y_offset,
+                                         color);
+                //upper left quarter
+                self.draw_line(x_center - x_offset_outer,
+                                         x_center - x_offset_inner + 1,
+                                         y_center - y_offset,
+                                         color);
+                //upper right quarter
+                self.draw_line(x_center + x_offset_inner,
+                                         x_center + x_offset_outer + 1,
+                                         y_center - y_offset,
+                                         color);
+            } else {
+                //if inner circle is not intersected, draw line between outer circle points
+                self.draw_line(x_center - x_offset_outer,
+                                         x_center + x_offset_outer + 1,
+                                         y_center - y_offset,
+                                         color);
+                self.draw_line(x_center - x_offset_outer,
+                                         x_center + x_offset_outer + 1,
+                                         y_center + y_offset,
+                                         color);
+            }
+
+        }
+    }
+
+    pub fn draw_line(&mut self, x_start: u16, x_end: u16, y: u16, color: u16) {
+        for x in x_start..x_end {
+            self.lcd.print_point_color_at(x as u16, y, color);
         }
     }
 
@@ -126,11 +166,11 @@ impl STM {
     }
 
     pub fn draw_fill_rectangle(&mut self,
-                           x_start: u16,
-                           x_end: u16,
-                           y_start: u16,
-                           y_end: u16,
-                           color: u16) {
+                               x_start: u16,
+                               x_end: u16,
+                               y_start: u16,
+                               y_end: u16,
+                               color: u16) {
 
         for x in x_start..x_end {
             for y in y_start..y_end {
@@ -181,16 +221,16 @@ impl STM {
 
         if value > 0 {
             self.draw_fill_rectangle(pos,
-                                 pos + width,
-                                 y_max / 2,
-                                 (y_max as i16 / 2 + value) as u16,
-                                 color);
+                                     pos + width,
+                                     y_max / 2,
+                                     (y_max as i16 / 2 + value) as u16,
+                                     color);
         } else {
             self.draw_fill_rectangle(pos,
-                                 pos + width,
-                                 (y_max as i16 / 2 + value) as u16,
-                                 y_max / 2,
-                                 color);
+                                     pos + width,
+                                     (y_max as i16 / 2 + value) as u16,
+                                     y_max / 2,
+                                     color);
 
         }
     }
