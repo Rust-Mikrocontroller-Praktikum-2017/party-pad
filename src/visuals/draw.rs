@@ -88,13 +88,15 @@ impl STM {
                           radius_inner: u16,
                           radius_outer: u16,
                           color: u16) {
-        assert!(radius_outer > radius_inner);
+        //assert!(radius_outer > radius_inner);
 
         let radius_outer_squared = radius_outer * radius_outer;
         let radius_inner_squared = radius_inner * radius_inner;
         let mut x_offset_outer = radius_outer + 1;
         let mut x_offset_inner;
-        //for every horizontal line, draw line between outer and inner circle
+        /*for every horizontal line, draw line between outer and inner circle,
+            uses symmetry
+        */
         for y_offset in 0..radius_outer + 1 {
             //compute outer circle point
             while euclidean_dist_squared(x_center + x_offset_outer,

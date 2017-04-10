@@ -20,7 +20,8 @@ use visuals::Visualizer;
 fn main(mut stm: STM) -> ! {
     stm.lcd.clear_screen();
     let mut param = VizParameter{spectrum: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-                                   1.0, 1.0, 1.0, 1.0]};
+                                   1.0, 1.0, 1.0, 1.0],
+                                   mic_input: [0;32]};
 
     let mut pos = 0; //TODO move completely to direct mic? lifetime issues..
     let mut last_radius = 0;
@@ -32,19 +33,29 @@ fn main(mut stm: STM) -> ! {
     let mut current_visualizer = energy_vz;
     let mut data0;
     let mut data1;
+    let mut count;
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
-        while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
-        data0 = stm.sai_2.bdr.read().data();
-        while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
-        data1 = stm.sai_2.bdr.read().data();
+        count = 0;
+        while count + 1 < param.mic_input.len() {
+            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+            data0 = stm.sai_2.bdr.read().data();
+            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+            data1 = stm.sai_2.bdr.read().data();
 
-        param.spectrum[0] = data0 as f32;
-        //current_visualizer.draw(&mut stm, &mut param);
+            param.mic_input[count] = data0 as i16;
+            param.mic_input[count+1] = data1 as i16;
+
+            count += 2;
+        }
+
+        current_visualizer.draw(&mut stm, &mut param);
         
+        /*
         stm.lcd.clear_screen();
-        let radius = 40;
+        let radius = 0;
         stm.draw_fill_ring(240, 131, radius,radius + 20,cons::BLUE);
+        */
         
     }
 }
@@ -59,7 +70,8 @@ pub struct STM {
 }
 
 pub struct VizParameter {
-    spectrum: [f32; 16]
+    spectrum: [f32; 16],
+    mic_input: [i16; 32]
 }
 
 #[no_mangle]
