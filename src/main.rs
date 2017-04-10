@@ -71,8 +71,7 @@ fn main(mut stm: STM) -> ! {
         }
 
         current_visualizer.draw(&mut stm, &mut param);
-                stm.lcd.clear_screen();
-
+w
         /*
         stm.lcd.clear_screen();
         let radius = 0;

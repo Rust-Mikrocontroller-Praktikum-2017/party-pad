@@ -12,7 +12,7 @@ pub struct SlidingSoundVisualizer<'a> {
 }
 impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
-        for i in 1..((X_MAX / self.bar_width) - 1){
+        for i in 1..240/*((X_MAX / self.bar_width) - 1)*/{
             /*
             if i == 1 {
                 stm.lcd.set_background_color(lcd::Color::rgb(255, 0, 0));
@@ -22,6 +22,14 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
                 stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 255));
 
             }
+            */
+            //TODO instead of refrest, redraw last scren bars with black
+            /*
+            stm.print_bar_signed(self.buffer[i as usize],
+                                 (i - 1) as u16 * self.bar_width,
+                                 self.bar_width,
+                                 Y_MAX,
+                                 RED);
             */
             stm.print_bar_signed(self.buffer[i as usize],
                                  (i - 1) as u16 * self.bar_width,
