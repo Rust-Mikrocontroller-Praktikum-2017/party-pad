@@ -1,9 +1,8 @@
 use super::super::stm;
-use visuals::visualizer as vz;
+use visuals::Visualizer;
 use collections::boxed::Box;
 use visuals::constants::*;
-use visuals::draw;
-use visuals::draw::xy;
+use visuals::draw::{self, xy};
 
 
 pub struct DefaultVisualizer {
@@ -11,18 +10,17 @@ pub struct DefaultVisualizer {
     color2: u16,
 }
 
-impl vz::Visualizer for DefaultVisualizer {
-    fn draw(& mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
+impl Visualizer for DefaultVisualizer {
+    fn draw(&mut self, mut stm: &mut stm, spectrum: [f32; 16]) {
         //draw something
-        draw::draw_spiral(xy {
-                              x_min: X_MIN,
-                              x_max: X_MAX,
-                              y_min: Y_MIN,
-                              y_max: Y_MAX,
-                          },
-                          self.color1,
-                          self.color2,
-                          &mut stm);
+        stm.draw_spiral(xy {
+                            x_min: X_MIN,
+                            x_max: X_MAX,
+                            y_min: Y_MIN,
+                            y_max: Y_MAX,
+                        },
+                        self.color1,
+                        self.color2);
     }
 }
 
@@ -34,4 +32,3 @@ impl DefaultVisualizer {
                  })
     }
 }
-

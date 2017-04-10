@@ -15,14 +15,15 @@ use core::ptr;
 use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::default_visualizer::DefaultVisualizer;
 use visuals::energy_visualizer::EnergyVisualizer;
-use visuals::visualizer::Visualizer;
+use visuals::Visualizer;
 
 use visuals::draw;
 
 
 fn main(mut stm: stm) -> ! {
     stm.lcd.clear_screen();
-    let  mut spectrum: [f32; 16] = [1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0];
+    let mut spectrum: [f32; 16] = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
+                                   1.0, 1.0, 1.0, 1.0];
 
     let mut pos = 0; //TODO move completely to direct mic? lifetime issues..
     let mut last_radius = 0;
@@ -46,14 +47,14 @@ fn main(mut stm: stm) -> ! {
         /*
         stm.lcd.clear_screen();
         let radius = 40;
-        draw::draw_fill_circle(&mut stm, 240, 131, radius,240-radius,240+radius,131-radius,131+radius,0x7C00 | 0x8000 );
+        stm.draw_fill_circle(&mut stm, 240, 131, radius,240-radius,240+radius,131-radius,131+radius,0x7C00 | 0x8000 );
         */
     }
 }
 
 pub struct stm {
     gpio: embedded::interfaces::gpio::Gpio,
-        i2c_3: i2c::I2C,
+    i2c_3: i2c::I2C,
     lcd: stm32f7::lcd::Lcd,
     led: embedded::interfaces::gpio::OutputPin,
     sai_2: &'static mut board::sai::Sai,
@@ -85,7 +86,7 @@ pub unsafe extern "C" fn reset() -> ! {
     // enable floating point unit
     let scb = stm32f7::cortex_m::peripheral::scb_mut();
     scb.cpacr.modify(|v| v | 0b1111 << 20);
-    
+
     let stm = init(board::hw());
     main(stm);
 }
