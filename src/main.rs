@@ -24,12 +24,12 @@ fn main(mut stm: STM) -> ! {
 
     let mut pos = 0; //TODO move completely to direct mic? lifetime issues..
     let mut last_radius = 0;
-    let direct_mic_vz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos, 2);
-    let default_vz: Box<Visualizer> =  DefaultVisualizer::new(
+    let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos, 2);
+    let default_viz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
-    let energy_vz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
-    let mut current_visualizer = energy_vz;
+    let energy_viz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
+    let mut current_visualizer = energy_viz;
     let mut data0;
     let mut data1;
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
