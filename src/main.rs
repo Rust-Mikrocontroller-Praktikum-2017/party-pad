@@ -23,6 +23,8 @@ use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
 use visuals::sliding_sound_wave_vz::SlidingSoundVisualizer;
 use visuals::sliding_sound_wave_points_vz::SlidingSoundPointsVisualizer;
 use visuals::spectrum_visualizer::SpectrumVisualizer;
+use visuals::spectrum_visualizer2::SpectrumVisualizer2;
+
 use visuals::Visualizer;
 
 use stm32f7::lcd;
@@ -60,11 +62,18 @@ fn main() -> ! {
     let mut buffer1 = [0;X_MAX as usize];
     let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new(&mut buffer1, 2, RED, BLACK);
     /*
-    EnergyVZ shows a circle indicating the energy of the given samples
+    EnergyVZ shows a circle indicating the energy of the given samples (experimental)
     ========================
     */
     let mut last_radius = 0;
     let energy_viz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
+     /*
+    SpectrumVZ shows the spectrum of the mic input
+    ========================
+    */
+    let mut history: [u16; X_MAX as usize] = [0;X_MAX as usize];
+    let mut max: [u16; X_MAX as usize] = [0;X_MAX as usize];
+    let spectrum_viz2: Box<Visualizer> = SpectrumVisualizer2::new(&mut history,&mut max, 2, GREEN, RED);
     /*
     SpectrumVZ shows the result of the frequency analysis
     ========================
@@ -78,7 +87,7 @@ fn main() -> ! {
                           0xFFFF,
                           0xFC00);
 
-    let mut current_visualizer = sliding_points_viz;
+    let mut current_visualizer = spectrum_viz2;
 
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
