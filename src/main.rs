@@ -58,8 +58,8 @@ fn main(mut stm: STM) -> ! {
     let default_viz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
-                          
-    let mut current_visualizer = direct_mic_viz;
+
+    let mut current_visualizer = sliding_viz;
     let mut data0;
     let mut data1;
     let mut count;
