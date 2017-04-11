@@ -6,6 +6,7 @@ pub mod energy_visualizer;
 pub mod sliding_sound_wave_vz;
 pub mod sliding_sound_wave_points_vz;
 pub mod draw;
+pub mod spectrum_visualizer;
 
 use hardware::STM;
 
