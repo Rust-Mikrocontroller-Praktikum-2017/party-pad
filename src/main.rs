@@ -19,12 +19,13 @@ use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
 use visuals::sliding_sound_wave_vz::SlidingSoundVisualizer;
 use visuals::Visualizer;
 
+#[inline(never)]
 fn main(mut stm: STM) -> ! {
     stm.lcd.clear_screen();
     //param struct for draw-method
     let mut param = VizParameter{spectrum: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                                    1.0, 1.0, 1.0, 1.0],
-                                   mic_input: [1000;32]};
+                                   mic_input: [100;32]};
 
     /*
     DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from left to right, followed by clearscreen

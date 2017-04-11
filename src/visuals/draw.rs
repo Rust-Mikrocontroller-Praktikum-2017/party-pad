@@ -1,5 +1,7 @@
 use super::super::STM;
 use core;
+use visuals::constants::*;
+
 
 use stm32f7::system_clock;
 
@@ -215,7 +217,7 @@ impl STM {
         let scale_factor = value as f32 * 10.0 / core::i16::MAX as f32;
         //let scale_factor = value as f32 / core::i16::MAX as f32;
         //TODO constants
-        let value = core::cmp::max(core::cmp::min((y_max as f32 * scale_factor) as i16,
+        let value = core::cmp::max(core::cmp::min((Y_MAX as f32 * scale_factor) as i16,
                                                   130 as i16),
                                    -130 as i16);
         //print_fill_rect(&mut lcd, pos, 20, pos+width, 20, 0x801F);
