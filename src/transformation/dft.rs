@@ -1,5 +1,6 @@
 
 use super::twiddles;
+use core;
 
 pub struct DFT {
     fft_len: usize,
@@ -7,7 +8,7 @@ pub struct DFT {
 }
 
 impl DFT {
-    pub fn create(fft_len: usize) -> Self {
+    pub fn new(fft_len: usize) -> Self {
         DFT {
             fft_len: fft_len,
             twiddles: twiddles::get_twiddles(fft_len)
@@ -32,19 +33,8 @@ impl DFT {
                 }
             }
             let power = spectrum_re * spectrum_re + spectrum_im * spectrum_im;
-            //let magnitude = sqrtf(power);
-            magnitudes[k] = power;
+            let magnitude = unsafe { core::intrinsics::sqrtf32(power) };
+            magnitudes[k] = magnitude;
         }
     }
-}
-
-fn sqrtf(n : f32) -> f32 {
-    let mut x = 0.5 * n;
-    while {
-        let error = (x*x - n) / x - 1.0;
-        error > 0.01 && error < -0.01
-    } {
-        x = 0.5 * (x + n / x);
-    }
-    x
 }
