@@ -9,12 +9,6 @@ pub mod draw;
 
 use hardware::STM;
 
-
-pub struct VizParameter {
-    pub spectrum: [f32; 16],
-    pub mic_input: [i16; 32],
-}
-
 pub trait Visualizer {
-    fn draw(&mut self, stm: &mut STM, param: &mut VizParameter);
+    fn draw(&mut self, stm: &mut STM);
 }

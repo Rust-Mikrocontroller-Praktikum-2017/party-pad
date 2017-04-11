@@ -1,6 +1,6 @@
 use visuals::Visualizer;
 use collections::boxed::Box;
-use super::{STM, VizParameter};
+use super::STM;
 use stm32f7::lcd;
 use visuals::constants::*;
 use core;
@@ -12,7 +12,7 @@ pub struct SlidingSoundPointsVisualizer<'a> {
     bar_width: u16,
 }
 impl<'a> Visualizer for SlidingSoundPointsVisualizer<'a> {
-    fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
+    fn draw(&mut self, mut stm: &mut STM) {
         let mode = false;
         let mut mic_input:[i16;1] = [0];
         audio::get_microphone_input(&mut stm, &mut mic_input, mode);

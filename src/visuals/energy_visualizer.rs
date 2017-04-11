@@ -1,5 +1,5 @@
 use collections::boxed::Box;
-use super::{STM, VizParameter};
+use super::STM;
 use visuals::constants::*;
 use visuals::Visualizer;
 use core;
@@ -10,7 +10,7 @@ pub struct EnergyVisualizer<'a> {
 }
 
 impl<'a> Visualizer for EnergyVisualizer<'a> {
-    fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
+    fn draw(&mut self, mut stm: &mut STM) {
         let mode = false;
         let mut mic_input: [i16; 32] = [0; 32];
         audio::get_microphone_input(&mut stm, &mut mic_input, mode);

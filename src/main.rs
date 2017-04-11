@@ -20,7 +20,6 @@ use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
 use visuals::sliding_sound_wave_vz::SlidingSoundVisualizer;
 use visuals::sliding_sound_wave_points_vz::SlidingSoundPointsVisualizer;
 use visuals::Visualizer;
-use visuals::VizParameter;
 
 use stm32f7::lcd;
 
@@ -28,10 +27,6 @@ use stm32f7::lcd;
 fn main() -> ! {
     let mut stm = hardware::STM::init();
     stm.lcd.clear_screen();
-    //param struct for draw-method
-    let mut param = VizParameter{spectrum: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
-                                   1.0, 1.0, 1.0, 1.0],
-                                   mic_input: [100;32]};
 
     /*
     DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from left to right, followed by clearscreen
@@ -74,33 +69,11 @@ fn main() -> ! {
                           0xFFFF,
                           0xFC00);
 
-    let mut current_visualizer = energy_viz;
-    let mut data0:u32;
-    let mut data1:u32;
-    let mut count;
+    let mut current_visualizer = sliding_points_viz;
+
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
-        count = 0;
-        /*
-        while count + 1 < param.mic_input.len() {
-            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
-            data0 = stm.sai_2.bdr.read().data();
-            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
-            data1 = stm.sai_2.bdr.read().data();
-
-            param.mic_input[count] = data0 as i16;
-            param.mic_input[count+1] = data1 as i16;
-
-            count += 2;
-        }
-        */
-
-        /*
-        let mode = false;
-        audio::get_microphone_input(&mut stm, &mut param.mic_input[0..1], mode);
-        */
-        
-        current_visualizer.draw(&mut stm, &mut param);        
+        current_visualizer.draw(&mut stm);        
     }
 }
 
