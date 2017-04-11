@@ -1,5 +1,5 @@
 
-use super::{Visualizer, STM, VizParameter};
+use super::{Visualizer, STM};
 use super::constants::*;
 use ::transformation::DFT;
 use ::transformation::hamming;
@@ -26,7 +26,7 @@ impl SpectrumVisualizer {
 }
 
 impl Visualizer for SpectrumVisualizer {
-    fn draw(&mut self, stm: &mut STM, param: &mut VizParameter) {
+    fn draw(&mut self, stm: &mut STM) {
         for i in 0..LENGTH {
             while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
             let right = stm.sai_2.bdr.read().data() as i16;

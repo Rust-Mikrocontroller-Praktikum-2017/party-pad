@@ -1,8 +1,10 @@
 #![no_std]
 #![no_main]
 #![feature(collections)]
+#![feature(core_intrinsics)]
 
 extern crate stm32f7_discovery as stm32f7;
+#[macro_use]
 extern crate collections;
 // initialization routines for .data and .bss
 extern crate r0;
@@ -10,6 +12,7 @@ extern crate r0;
 mod hardware;
 mod visuals;
 mod audio;
+mod transformation;
 
 use collections::boxed::Box;
 use visuals::constants::*;
