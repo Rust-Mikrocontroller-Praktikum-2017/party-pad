@@ -1,5 +1,5 @@
 use collections::boxed::Box;
-use super::super::{STM, VizParameter};
+use super::{STM, VizParameter};
 use visuals::constants::*;
 use visuals::Visualizer;
 use core;
@@ -67,4 +67,3 @@ fn print_circle_vary_size(mut stm: &mut STM,
     //stm.draw_fill_circle(x_pos, y_pos, zero_size + value as u16, color);
     *last_radius = new_radius;
 }
-

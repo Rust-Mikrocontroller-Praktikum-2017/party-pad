@@ -1,4 +1,4 @@
-use super::super::STM;
+use super::STM;
 use core;
 
 use stm32f7::system_clock;
@@ -50,15 +50,15 @@ impl STM {
                 x_offset -= 1;
             }
             self.draw_rectangle_filled(x_center - x_offset,
-                                     x_center + x_offset + 1,
-                                     y_center + y_offset,
-                                     y_center + y_offset + 1,
-                                     color);
+                                       x_center + x_offset + 1,
+                                       y_center + y_offset,
+                                       y_center + y_offset + 1,
+                                       color);
             self.draw_rectangle_filled(x_center - x_offset,
-                                     x_center + x_offset + 1,
-                                     y_center - y_offset,
-                                     y_center - y_offset + 1,
-                                     color);
+                                       x_center + x_offset + 1,
+                                       y_center - y_offset,
+                                       y_center - y_offset + 1,
+                                       color);
             /*
             self.lcd
                 .print_point_color_at(x_center + x_offset, y_center + y_offset, color);
@@ -76,11 +76,11 @@ impl STM {
 
 
     pub fn draw_ring_filled(&mut self,
-                          x_center: u16,
-                          y_center: u16,
-                          radius_inner: u16,
-                          radius_outer: u16,
-                          color: u16) {
+                            x_center: u16,
+                            y_center: u16,
+                            radius_inner: u16,
+                            radius_outer: u16,
+                            color: u16) {
         //assert!(radius_outer > radius_inner);
 
         let radius_outer_squared = radius_outer * radius_outer;
@@ -110,34 +110,34 @@ impl STM {
                 }
                 //lower right quarter
                 self.draw_line_h(x_center + x_offset_inner,
-                                         x_center + x_offset_outer + 1,
-                                         y_center + y_offset,
-                                         color);
+                                 x_center + x_offset_outer + 1,
+                                 y_center + y_offset,
+                                 color);
                 //lower left quarter
                 self.draw_line_h(x_center - x_offset_outer,
-                                         x_center - x_offset_inner + 1,
-                                         y_center + y_offset,
-                                         color);
+                                 x_center - x_offset_inner + 1,
+                                 y_center + y_offset,
+                                 color);
                 //upper left quarter
                 self.draw_line_h(x_center - x_offset_outer,
-                                         x_center - x_offset_inner + 1,
-                                         y_center - y_offset,
-                                         color);
+                                 x_center - x_offset_inner + 1,
+                                 y_center - y_offset,
+                                 color);
                 //upper right quarter
                 self.draw_line_h(x_center + x_offset_inner,
-                                         x_center + x_offset_outer + 1,
-                                         y_center - y_offset,
-                                         color);
+                                 x_center + x_offset_outer + 1,
+                                 y_center - y_offset,
+                                 color);
             } else {
                 //if inner circle is not intersected, draw line between outer circle points
                 self.draw_line_h(x_center - x_offset_outer,
-                                         x_center + x_offset_outer + 1,
-                                         y_center - y_offset,
-                                         color);
+                                 x_center + x_offset_outer + 1,
+                                 y_center - y_offset,
+                                 color);
                 self.draw_line_h(x_center - x_offset_outer,
-                                         x_center + x_offset_outer + 1,
-                                         y_center + y_offset,
-                                         color);
+                                 x_center + x_offset_outer + 1,
+                                 y_center + y_offset,
+                                 color);
             }
 
         }
@@ -167,11 +167,11 @@ impl STM {
     }
 
     pub fn draw_rectangle_filled(&mut self,
-                               x_min: u16,
-                               x_max: u16,
-                               y_min: u16,
-                               y_max: u16,
-                               color: u16) {
+                                 x_min: u16,
+                                 x_max: u16,
+                                 y_min: u16,
+                                 y_max: u16,
+                                 color: u16) {
 
         for x in x_min..x_max {
             for y in y_min..y_max {
@@ -222,16 +222,16 @@ impl STM {
 
         if value > 0 {
             self.draw_rectangle_filled(pos,
-                                     pos + width,
-                                     y_max / 2,
-                                     (y_max as i16 / 2 + value) as u16,
-                                     color);
+                                       pos + width,
+                                       y_max / 2,
+                                       (y_max as i16 / 2 + value) as u16,
+                                       color);
         } else {
             self.draw_rectangle_filled(pos,
-                                     pos + width,
-                                     (y_max as i16 / 2 + value) as u16,
-                                     y_max / 2,
-                                     color);
+                                       pos + width,
+                                       (y_max as i16 / 2 + value) as u16,
+                                       y_max / 2,
+                                       color);
 
         }
     }
@@ -274,4 +274,3 @@ fn euclidean_dist_squared(x_1: u16, y_1: u16, x_2: u16, y_2: u16) -> u16 {
     y_high - y_low;
     (x_high - x_low) * (x_high - x_low) + (y_high - y_low) * (y_high - y_low)
 }
-

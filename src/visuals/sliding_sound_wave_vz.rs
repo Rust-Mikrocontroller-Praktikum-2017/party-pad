@@ -1,6 +1,6 @@
 use visuals::Visualizer;
 use collections::boxed::Box;
-use super::super::{STM, VizParameter};
+use super::{STM, VizParameter};
 use stm32f7::lcd;
 use visuals::constants::*;
 
@@ -32,12 +32,13 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
                                  Y_MAX,
                                  RED);
             */
+
             stm.print_bar_signed(self.buffer[i as usize],
                                  (i - 1) as u16 * self.bar_width,
                                  self.bar_width,
                                  Y_MAX,
                                  RED);
-            
+
             self.buffer[i as usize - 1] = self.buffer[i as usize];
         }
         self.buffer[((X_MAX / self.bar_width) - 1) as usize] = param.mic_input[0];
@@ -46,7 +47,7 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
                              self.bar_width,
                              Y_MAX,
                              RED);
-       /*
+        /*
         if *self.current_pos + 2 * self.bar_width >= X_MAX {
             *self.current_pos = 0;
             stm.lcd.clear_screen();
@@ -72,4 +73,3 @@ impl<'a> SlidingSoundVisualizer<'a> {
                  })
     }
 }
-

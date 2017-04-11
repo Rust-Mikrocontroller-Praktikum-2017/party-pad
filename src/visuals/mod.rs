@@ -6,7 +6,12 @@ pub mod energy_visualizer;
 pub mod sliding_sound_wave_vz;
 pub mod draw;
 
-use super::{STM,VizParameter};
+use hardware::STM;
+
+pub struct VizParameter {
+    pub spectrum: [f32; 16],
+    pub mic_input: [i16; 32],
+}
 
 pub trait Visualizer {
     fn draw(&mut self, stm: &mut STM, param: &mut VizParameter);

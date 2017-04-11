@@ -1,6 +1,6 @@
 use visuals::Visualizer;
 use collections::boxed::Box;
-use super::super::{STM, VizParameter};
+use super::{STM, VizParameter};
 use visuals::constants::*;
 
 pub struct DirectMicVisualizer<'a> {
