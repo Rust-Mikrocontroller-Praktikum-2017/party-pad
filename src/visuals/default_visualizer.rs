@@ -1,7 +1,6 @@
-use super::super::{STM, VizParameter};
-use visuals::Visualizer;
+use super::{STM, VizParameter, Visualizer};
+use super::constants::*;
 use collections::boxed::Box;
-use visuals::constants::*;
 
 
 pub struct DefaultVisualizer {
@@ -24,4 +23,3 @@ impl DefaultVisualizer {
                  })
     }
 }
-

@@ -1,7 +1,6 @@
 use visuals::Visualizer;
 use collections::boxed::Box;
-use super::super::{STM,VizParameter};
-use stm32f7::lcd;
+use super::{STM,VizParameter};
 use visuals::constants::*;
 
 
@@ -26,7 +25,7 @@ impl<'a> Visualizer for DirectMicBatchVisualizer<'a> {
             *self.current_pos += self.bar_width;
         }
     }
-}   
+}
 impl<'a> DirectMicBatchVisualizer<'a> {
     pub fn new(current_pos: &'a mut u16, bar_width: u16) -> Box<DirectMicBatchVisualizer<'a>> {
         Box::new(DirectMicBatchVisualizer {
@@ -35,5 +34,3 @@ impl<'a> DirectMicBatchVisualizer<'a> {
                  })
     }
 }
-
-
