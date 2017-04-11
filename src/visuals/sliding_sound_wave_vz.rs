@@ -12,7 +12,8 @@ pub struct SlidingSoundVisualizer<'a> {
 }
 impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
-        for i in 1..240/*((X_MAX / self.bar_width) - 1)*/{
+        stm.lcd.clear_screen();
+        for i in 1..((X_MAX / self.bar_width)) {
             /*
             if i == 1 {
                 stm.lcd.set_background_color(lcd::Color::rgb(255, 0, 0));
@@ -39,7 +40,7 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
             
             self.buffer[i as usize - 1] = self.buffer[i as usize];
         }
-        self.buffer[((X_MAX / self.bar_width) - 2) as usize] = param.mic_input[0];
+        self.buffer[((X_MAX / self.bar_width) - 1) as usize] = param.mic_input[0];
         stm.print_bar_signed(param.mic_input[0],
                              (((X_MAX / self.bar_width) - 1) * self.bar_width),
                              self.bar_width,

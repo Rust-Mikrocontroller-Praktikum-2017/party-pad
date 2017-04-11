@@ -19,25 +19,48 @@ use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
 use visuals::sliding_sound_wave_vz::SlidingSoundVisualizer;
 use visuals::Visualizer;
 
+#[inline(never)]
 fn main(mut stm: STM) -> ! {
     stm.lcd.clear_screen();
+    //param struct for draw-method
     let mut param = VizParameter{spectrum: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                                    1.0, 1.0, 1.0, 1.0],
                                    mic_input: [1000;32]};
 
+    /*
+    DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from left to right, followed by clearscreen
+    ========================
+    */
     let mut pos0 = 0; //TODO move completely to direct mic? lifetime issues..
-    let mut pos1 = 0; 
-    let mut pos2 = 0;
-    let mut last_radius = 0;
-    let mut buffer = [0;X_MAX as usize];
     let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos0, 2);
+    /*
+    DirectMicBatchVZ shows the soundwave from one mic like DirectSoundMic, but receives a batch of samples
+    ========================
+    */
+    let mut pos1 = 0; 
     let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(&mut pos1, 2);
+    /*
+    SlidingSoundVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
+    ========================
+    */
+    let mut pos2 = 0;
+    let mut buffer = [0;X_MAX as usize];
     let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(&mut buffer, &mut pos2, 2);
+    /*
+    EnergyVZ shows a circle indicating the energy of the given samples
+    ========================
+    */
+    let mut last_radius = 0;
+    let energy_viz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
+    /*
+    The defult VZ draws something
+     ========================
+    */
     let default_viz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
-    let energy_viz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
-    let mut current_visualizer = direct_mic_viz;
+
+    let mut current_visualizer = sliding_viz;
     let mut data0;
     let mut data1;
     let mut count;
