@@ -12,7 +12,7 @@ pub struct DirectMicVisualizer<'a> {
 impl<'a> Visualizer for DirectMicVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM) {
         let mode = false;
-        let mut mic_input:[i16;1] = [0];
+        let mut mic_input: [i16; 1] = [0];
         audio::get_microphone_input(&mut stm, &mut mic_input, mode);
 
         //draw something
@@ -33,3 +33,4 @@ impl<'a> DirectMicVisualizer<'a> {
                  })
     }
 }
+

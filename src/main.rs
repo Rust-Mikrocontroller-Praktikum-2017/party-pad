@@ -54,7 +54,7 @@ fn main() -> ! {
     ========================
     */
     let mut buffer1 = [0;X_MAX as usize];
-    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new(&mut buffer1, 2);
+    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new(&mut buffer1, 2, RED, BLACK);
     /*
     EnergyVZ shows a circle indicating the energy of the given samples
     ========================
