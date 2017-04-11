@@ -22,6 +22,7 @@ use visuals::energy_visualizer::EnergyVisualizer;
 use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
 use visuals::sliding_sound_wave_vz::SlidingSoundVisualizer;
 use visuals::sliding_sound_wave_points_vz::SlidingSoundPointsVisualizer;
+use visuals::spectrum_visualizer::SpectrumVisualizer;
 use visuals::Visualizer;
 
 use stm32f7::lcd;
@@ -64,6 +65,11 @@ fn main() -> ! {
     */
     let mut last_radius = 0;
     let energy_viz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
+    /*
+    SpectrumVZ shows the result of the frequency analysis
+    ========================
+    */
+    let spectrum_viz: Box<Visualizer> = Box::new(SpectrumVisualizer::new());
     /*
     The defult VZ draws something
      ========================
