@@ -1,6 +1,6 @@
 use visuals::Visualizer;
 use collections::boxed::Box;
-use super::super::{STM, VizParameter};
+use super::{STM, VizParameter};
 use stm32f7::lcd;
 use visuals::constants::*;
 use core;
@@ -8,7 +8,6 @@ use core;
 
 pub struct SlidingSoundPointsVisualizer<'a> {
     buffer: &'a mut [i16; X_MAX as usize],
-    current_pos: &'a mut u16,
     bar_width: u16,
 }
 impl<'a> Visualizer for SlidingSoundPointsVisualizer<'a> {
@@ -53,11 +52,9 @@ impl<'a> Visualizer for SlidingSoundPointsVisualizer<'a> {
 }
 impl<'a> SlidingSoundPointsVisualizer<'a> {
     pub fn new(buffer: &'a mut [i16; X_MAX as usize],
-               current_pos: &'a mut u16,
                bar_width: u16)
                -> Box<SlidingSoundPointsVisualizer<'a>> {
         Box::new(SlidingSoundPointsVisualizer {
-                     current_pos: current_pos,
                      bar_width: bar_width,
                      buffer: buffer,
                  })
