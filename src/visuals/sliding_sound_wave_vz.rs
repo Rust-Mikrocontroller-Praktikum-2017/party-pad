@@ -4,16 +4,18 @@ use super::{STM, VizParameter};
 use stm32f7::lcd;
 use visuals::constants::*;
 use core;
+use audio;
 
 
 pub struct SlidingSoundVisualizer<'a> {
     buffer: &'a mut [i16; X_MAX as usize],
-    current_pos: &'a mut u16,
     bar_width: u16,
 }
 impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
-        //stm.lcd.clear_screen();
+        let mode = false;
+        let mut mic_input:[i16;1] = [0];
+        audio::get_microphone_input(&mut stm, &mut mic_input, mode);
         for i in 1..((X_MAX / self.bar_width)) {
             /*
             if i == 1 {
@@ -107,13 +109,13 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
             self.buffer[i as usize - 1] = self.buffer[i as usize];
         }
         //TODO scaling?
-        let scale_factor = param.mic_input[0]  as f32 * 10.0 / core::i16::MAX as f32;
+        let scale_factor = mic_input[0]  as f32 * 10.0 / core::i16::MAX as f32;
         let new_value = core::cmp::max(core::cmp::min((Y_MAX as f32 * scale_factor) as i16,
                                                   130 as i16),
                                    -130 as i16);
         self.buffer[((X_MAX / self.bar_width) - 1) as usize] = new_value;
         //TODO reprint like above? or write to buffer before?
-        /*stm.print_bar_signed(param.mic_input[0],
+        /*stm.print_bar_signed(mic_input[0],
                              (((X_MAX / self.bar_width) - 1) * self.bar_width),
                              self.bar_width,
                              Y_MAX,
@@ -124,7 +126,7 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
             *self.current_pos = 0;
             stm.lcd.clear_screen();
         }
-        stm.print_bar_signed(param.mic_input[0],
+        stm.print_bar_signed(mic_input[0],
                              *self.current_pos,
                              self.bar_width,
                              Y_MAX,
@@ -135,11 +137,9 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
 }
 impl<'a> SlidingSoundVisualizer<'a> {
     pub fn new(buffer: &'a mut [i16; X_MAX as usize],
-               current_pos: &'a mut u16,
                bar_width: u16)
                -> Box<SlidingSoundVisualizer<'a>> {
         Box::new(SlidingSoundVisualizer {
-                     current_pos: current_pos,
                      bar_width: bar_width,
                      buffer: buffer,
                  })

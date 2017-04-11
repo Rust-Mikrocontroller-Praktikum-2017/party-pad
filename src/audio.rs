@@ -1,15 +1,23 @@
-#![no_std]
-#![no_main]
-extern crate stm32f7_discovery as stm32f7;
-use stm32f7::{system_clock, i2c, board, embedded};
-use core::ptr;
+use hardware::STM;
 
-fn get_microphone_input() {
-    // poll for new audio data
-    while !sai_2.bsr.read().freq() {} // fifo_request_flag
-    let data0 = sai_2.bdr.read().data();
-    while !sai_2.bsr.read().freq() {} // fifo_request_flag
-    let data1 = sai_2.bdr.read().data();
-
-    lcd.set_next_col(data0, data1);
+pub fn get_microphone_input(stm: &mut STM, audio_data: &mut [i16], mode: bool) {
+    if mode {
+        //mode == true => get data from both mics, mic right at even indices
+        for i in 0..audio_data.len() / 2 {
+            // poll for new audio data
+            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+            audio_data[2 * i] = stm.sai_2.bdr.read().data() as i16;
+            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+            audio_data[2 * i + 1] = stm.sai_2.bdr.read().data() as i16;
+        }
+    } else {
+        //mode == false => get data only from right mic
+        for data in audio_data {
+            // poll for new audio data
+            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+            *data = stm.sai_2.bdr.read().data() as i16;
+            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
+        }
+    }
 }
+

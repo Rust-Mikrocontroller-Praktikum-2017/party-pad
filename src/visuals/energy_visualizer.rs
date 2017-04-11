@@ -3,7 +3,7 @@ use super::{STM, VizParameter};
 use visuals::constants::*;
 use visuals::Visualizer;
 use core;
-
+use audio;
 
 pub struct EnergyVisualizer<'a> {
     last_radius: &'a mut u16,
@@ -11,16 +11,19 @@ pub struct EnergyVisualizer<'a> {
 
 impl<'a> Visualizer for EnergyVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
-        //draw something
+        let mode = false;
+        let mut mic_input: [i16; 32] = [0; 32];
+        audio::get_microphone_input(&mut stm, &mut mic_input, mode);
+
         let mut data0: u32 = 0;
-        for i in 0..param.spectrum.len() {
-            data0 += (param.spectrum[i] * param.spectrum[i]) as u32;
+        for i in 0..mic_input.len() {
+            data0 += (mic_input[i] * mic_input[i]) as u32;
         }
         //let max_val = spectrum.len() as u32 * core::i16::MAX as u32 * core::i16::MAX as u32;
         //let scale_factor = data0 as f32 / spectrum.len() as f32 / core::i16::MAX as f32 /
         //core::i16::MAX as f32;
         let mut scale_factor = data0 as f32 / (core::i16::MAX as f32 * core::i16::MAX as f32) /
-                               param.mic_input.len() as f32;
+                               mic_input.len() as f32;
         scale_factor *= 2000.0;
 
         let zero_size = 20;
@@ -67,3 +70,4 @@ fn print_circle_vary_size(mut stm: &mut STM,
     //stm.draw_fill_circle(x_pos, y_pos, zero_size + value as u16, color);
     *last_radius = new_radius;
 }
+

@@ -4,6 +4,7 @@ use super::{STM, VizParameter};
 use stm32f7::lcd;
 use visuals::constants::*;
 use core;
+use audio;
 
 
 pub struct SlidingSoundPointsVisualizer<'a> {
@@ -12,12 +13,16 @@ pub struct SlidingSoundPointsVisualizer<'a> {
 }
 impl<'a> Visualizer for SlidingSoundPointsVisualizer<'a> {
     fn draw(&mut self, mut stm: &mut STM, param: &mut VizParameter) {
+        let mode = false;
+        let mut mic_input:[i16;1] = [0];
+        audio::get_microphone_input(&mut stm, &mut mic_input, mode);
+
         /*
-        let scale_factor = param.mic_input[0]  as f32 * 4.0 / core::i16::MAX as f32;
+        let scale_factor = mic_input[0]  as f32 * 4.0 / core::i16::MAX as f32;
         let new_value = core::cmp::max(core::cmp::min((Y_MAX as f32 * scale_factor) as i16, (130/self.bar_width) as i16), (-130 as i16) / (self.bar_width as i16));
         self.buffer[((X_MAX / self.bar_width)-1) as usize] = new_value;
         */
-        let scale_factor = param.mic_input[0]  as f32 * 2.0 / core::i16::MAX as f32;
+        let scale_factor = mic_input[0]  as f32 * 2.0 / core::i16::MAX as f32;
         let new_value = core::cmp::max(core::cmp::min((Y_MAX as f32 * scale_factor) as i16,
                                                   130 as i16),
                                    -130 as i16);

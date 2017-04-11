@@ -9,6 +9,7 @@ extern crate r0;
 
 mod hardware;
 mod visuals;
+mod audio;
 
 use collections::boxed::Box;
 use visuals::constants::*;
@@ -51,7 +52,7 @@ fn main() -> ! {
     */
     let mut pos2 = 0;
     let mut buffer = [0;X_MAX as usize];
-    let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(&mut buffer, &mut pos2, 2);
+    let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(&mut buffer, 2);
     /*
     SlidingSoundPointsVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
     draws points
@@ -73,9 +74,9 @@ fn main() -> ! {
                           0xFFFF,
                           0xFC00);
 
-    let mut current_visualizer = sliding_points_viz;
-    let mut data0;
-    let mut data1;
+    let mut current_visualizer = energy_viz;
+    let mut data0:u32;
+    let mut data1:u32;
     let mut count;
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
@@ -94,27 +95,12 @@ fn main() -> ! {
         }
         */
 
-        //while count < param.mic_input.len() {
-        while count < 1 {
-            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
-            data0 = stm.sai_2.bdr.read().data();
-            while !stm.sai_2.bsr.read().freq() {} // fifo_request_flag
-            data1 = stm.sai_2.bdr.read().data();
-
-            param.mic_input[count] = data0 as i16;
-            param.spectrum[count] = data0 as f32;
-
-            count += 1;
-        }
-
-        current_visualizer.draw(&mut stm, &mut param);
-
         /*
-        stm.lcd.clear_screen();
-        let radius = 10;
-        stm.draw_square(240, 131, radius,BLUE);
+        let mode = false;
+        audio::get_microphone_input(&mut stm, &mut param.mic_input[0..1], mode);
         */
         
+        current_visualizer.draw(&mut stm, &mut param);        
     }
 }
 
