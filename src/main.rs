@@ -19,6 +19,7 @@ use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
 use visuals::sliding_sound_wave_vz::SlidingSoundVisualizer;
 use visuals::Visualizer;
 
+#[inline(never)]
 fn main(mut stm: STM) -> ! {
     stm.lcd.clear_screen();
     let mut param = VizParameter{spectrum: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
