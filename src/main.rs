@@ -17,6 +17,7 @@ use visuals::direct_mic_visualizer::DirectMicVisualizer;
 use visuals::energy_visualizer::EnergyVisualizer;
 use visuals::direct_mic_batch_vz::DirectMicBatchVisualizer;
 use visuals::sliding_sound_wave_vz::SlidingSoundVisualizer;
+use visuals::sliding_sound_wave_points_vz::SlidingSoundPointsVisualizer;
 use visuals::Visualizer;
 use visuals::VizParameter;
 
@@ -29,7 +30,7 @@ fn main() -> ! {
     //param struct for draw-method
     let mut param = VizParameter{spectrum: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0,
                                    1.0, 1.0, 1.0, 1.0],
-                                   mic_input: [1000;32]};
+                                   mic_input: [100;32]};
 
     /*
     DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from left to right, followed by clearscreen
@@ -45,11 +46,20 @@ fn main() -> ! {
     let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(&mut pos1, 2);
     /*
     SlidingSoundVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
+    draws bars
     ========================
     */
     let mut pos2 = 0;
     let mut buffer = [0;X_MAX as usize];
     let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(&mut buffer, &mut pos2, 2);
+    /*
+    SlidingSoundPointsVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
+    draws points
+    ========================
+    */
+    let mut pos3= 0;
+    let mut buffer1 = [0;X_MAX as usize];
+    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new(&mut buffer1, &mut pos3, 2);
     /*
     EnergyVZ shows a circle indicating the energy of the given samples
     ========================
@@ -64,7 +74,7 @@ fn main() -> ! {
                           0xFFFF,
                           0xFC00);
 
-    let mut current_visualizer = sliding_viz;
+    let mut current_visualizer = sliding_points_viz;
     let mut data0;
     let mut data1;
     let mut count;
@@ -99,12 +109,11 @@ fn main() -> ! {
         }
 
         current_visualizer.draw(&mut stm, &mut param);
-        //        stm.lcd.clear_screen();
 
         /*
         stm.lcd.clear_screen();
-        let radius = 0;
-        stm.draw_fill_ring(240, 131, radius,radius + 20,cons::BLUE);
+        let radius = 10;
+        stm.draw_square(240, 131, radius,BLUE);
         */
         
     }
