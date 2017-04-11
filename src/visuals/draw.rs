@@ -237,6 +237,14 @@ impl STM {
 
         }
     }
+    pub fn draw_square(&mut self, x:u16, y:u16, length:u16, color:u16) {
+        for x1 in x..(x + length) {
+            for y1 in y..(y + length) {
+                self.lcd.print_point_color_at(x1 as u16, y1 as u16, color);
+            }
+        }
+
+    }
     /*pub fn draw_rectangle_strip(&mut self,
                                 x: u16,
                                 y: u16,

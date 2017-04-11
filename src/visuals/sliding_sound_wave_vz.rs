@@ -92,7 +92,7 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
                     stm.draw_rectangle_filled((i - 1) as u16 * self.bar_width, 
                                                 i as u16 * self.bar_width,
                                                 ((Y_MAX/2) as i16 - self.buffer[(i-1) as usize]) as u16, 
-                                                ((Y_MAX/2) as i16 - self.buffer[i as usize]) as u16,
+                                                ((Y_MAX/2) as i16- self.buffer[i as usize]) as u16,
                                                 RED);
                 } else {
                     stm.lcd.set_background_color(lcd::Color::rgb(0, 255, 0)); 
