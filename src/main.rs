@@ -53,15 +53,6 @@ fn main() -> ! {
      a batch of samples
     ========================
     */
-
-
-
-
-
-
-
-
-
     let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(2);
     visualizers.push(direct_mic_batch_viz);
     /*
@@ -90,15 +81,6 @@ fn main() -> ! {
     SpectrumVZ shows the spectrum of the mic input
     ========================
     */
-
-
-
-
-
-
-
-
-
     let spectrum_viz2: Box<Visualizer> = SpectrumVisualizer2::new(2, GREEN, RED, BLACK);
     visualizers.push(spectrum_viz2);
     /*

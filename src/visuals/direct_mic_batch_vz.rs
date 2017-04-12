@@ -103,15 +103,6 @@ impl Visualizer for DirectMicBatchVisualizer {
             stm.print_bar_signed(mic_input[i], self.current_pos, self.bar_width, RED);
             self.current_pos += self.bar_width;
             */
-
-
-
-
-
-
-
-
-
         }
     }
 }
