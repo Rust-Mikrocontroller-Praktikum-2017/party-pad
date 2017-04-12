@@ -71,9 +71,7 @@ fn main() -> ! {
     SpectrumVZ shows the spectrum of the mic input
     ========================
     */
-    let mut history: [u16; X_MAX as usize] = [0;X_MAX as usize];
-    let mut max: [u16; X_MAX as usize] = [0;X_MAX as usize];
-    let spectrum_viz2: Box<Visualizer> = SpectrumVisualizer2::new(&mut history,&mut max, 2, GREEN, RED);
+    let spectrum_viz2: Box<Visualizer> = SpectrumVisualizer2::new(2, GREEN, RED, BLACK);
     /*
     SpectrumVZ shows the result of the frequency analysis
     ========================
