@@ -6,13 +6,13 @@ use core;
 use audio;
 
 
-pub struct SlidingSoundPointsVisualizer<'a> {
-    buffer: &'a mut [i16; X_MAX as usize],
+pub struct SlidingSoundPointsVisualizer {
+    buffer: [i16; X_MAX as usize],
     bar_width: u16,
     color_front: u16,
     color_back: u16,
 }
-impl<'a> Visualizer for SlidingSoundPointsVisualizer<'a> {
+impl<'a> Visualizer for SlidingSoundPointsVisualizer {
     fn draw(&mut self, mut stm: &mut STM) {
         let mode = false;
         let mut mic_input:[i16;1] = [0];
@@ -58,15 +58,14 @@ impl<'a> Visualizer for SlidingSoundPointsVisualizer<'a> {
         */
     }
 }
-impl<'a> SlidingSoundPointsVisualizer<'a> {
-    pub fn new(buffer: &'a mut [i16; X_MAX as usize],
-               bar_width: u16,
+impl SlidingSoundPointsVisualizer {
+    pub fn new(bar_width: u16,
                color_front:u16,
                color_back:u16,)
-               -> Box<SlidingSoundPointsVisualizer<'a>> {
+               -> Box<SlidingSoundPointsVisualizer> {
         Box::new(SlidingSoundPointsVisualizer {
                      bar_width: bar_width,
-                     buffer: buffer,
+                     buffer: [0; X_MAX as usize],
                      color_front:color_front,
                      color_back:color_back,
                  })

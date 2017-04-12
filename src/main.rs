@@ -38,35 +38,29 @@ fn main() -> ! {
     DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from left to right, followed by clearscreen
     ========================
     */
-    let mut pos0 = 0; //TODO move completely to direct mic? lifetime issues..
-    let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(&mut pos0, 2);
+    let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(2);
     /*
     DirectMicBatchVZ shows the soundwave from one mic like DirectSoundMic, but receives a batch of samples
     ========================
     */
-    let mut pos1 = 0; 
-    let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(&mut pos1, 2);
+    let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(2);
     /*
     SlidingSoundVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
     draws bars
     ========================
     */
-    let mut pos2 = 0;
-    let mut buffer = [0;X_MAX as usize];
-    let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(&mut buffer, 2);
+    let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(2);
     /*
     SlidingSoundPointsVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
     draws points
     ========================
     */
-    let mut buffer1 = [0;X_MAX as usize];
-    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new(&mut buffer1, 2, RED, BLACK);
+    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new( 2, RED, BLACK);
     /*
     EnergyVZ shows a circle indicating the energy of the given samples (experimental)
     ========================
     */
-    let mut last_radius = 0;
-    let energy_viz: Box<Visualizer> = EnergyVisualizer::new(&mut last_radius);
+    let energy_viz: Box<Visualizer> = EnergyVisualizer::new();
      /*
     SpectrumVZ shows the spectrum of the mic input
     ========================

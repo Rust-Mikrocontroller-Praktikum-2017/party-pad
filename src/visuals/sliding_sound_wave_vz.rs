@@ -7,11 +7,11 @@ use core;
 use audio;
 
 
-pub struct SlidingSoundVisualizer<'a> {
-    buffer: &'a mut [i16; X_MAX as usize],
+pub struct SlidingSoundVisualizer {
+    buffer: [i16; X_MAX as usize],
     bar_width: u16,
 }
-impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
+impl Visualizer for SlidingSoundVisualizer {
     fn draw(&mut self, mut stm: &mut STM) {
         let mode = false;
         let mut mic_input:[i16;1] = [0];
@@ -135,13 +135,12 @@ impl<'a> Visualizer for SlidingSoundVisualizer<'a> {
         */
     }
 }
-impl<'a> SlidingSoundVisualizer<'a> {
-    pub fn new(buffer: &'a mut [i16; X_MAX as usize],
-               bar_width: u16)
-               -> Box<SlidingSoundVisualizer<'a>> {
+impl SlidingSoundVisualizer {
+    pub fn new(bar_width: u16)
+               -> Box<SlidingSoundVisualizer> {
         Box::new(SlidingSoundVisualizer {
                      bar_width: bar_width,
-                     buffer: buffer,
+                     buffer: [0;X_MAX as usize],
                  })
     }
 }

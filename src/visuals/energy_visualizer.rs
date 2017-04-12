@@ -5,11 +5,11 @@ use visuals::Visualizer;
 use core;
 use audio;
 
-pub struct EnergyVisualizer<'a> {
-    last_radius: &'a mut u16,
+pub struct EnergyVisualizer {
+    last_radius: u16,
 }
 
-impl<'a> Visualizer for EnergyVisualizer<'a> {
+impl Visualizer for EnergyVisualizer {
     fn draw(&mut self, mut stm: &mut STM) {
         let mode = false;
         let mut mic_input: [i16; 32] = [0; 32];
@@ -39,9 +39,9 @@ impl<'a> Visualizer for EnergyVisualizer<'a> {
                                RED);
     }
 }
-impl<'a> EnergyVisualizer<'a> {
-    pub fn new(last_radius: &'a mut u16) -> Box<EnergyVisualizer<'a>> {
-        Box::new(EnergyVisualizer { last_radius: last_radius })
+impl EnergyVisualizer {
+    pub fn new() -> Box<EnergyVisualizer> {
+        Box::new(EnergyVisualizer { last_radius: 0 })
     }
 }
 fn print_circle_vary_size(mut stm: &mut STM,
