@@ -28,49 +28,14 @@ use visuals::spectrum_visualizer2::SpectrumVisualizer2;
 use visuals::Visualizer;
 
 use stm32f7::lcd;
+use stm32f7::touch;
 
 #[inline(never)]
 fn main() -> ! {
     let mut stm = hardware::STM::init();
     stm.lcd.clear_screen();
 
-    /*
-    DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from left to right, followed by clearscreen
-    ========================
-    */
-    let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(2);
-    /*
-    DirectMicBatchVZ shows the soundwave from one mic like DirectSoundMic, but receives a batch of samples
-    ========================
-    */
-    let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(2);
-    /*
-    SlidingSoundVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
-    draws bars
-    ========================
-    */
-    let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(2);
-    /*
-    SlidingSoundPointsVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
-    draws points
-    ========================
-    */
-    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new( 2, RED, BLACK);
-    /*
-    EnergyVZ shows a circle indicating the energy of the given samples (experimental)
-    ========================
-    */
-    let energy_viz: Box<Visualizer> = EnergyVisualizer::new();
-     /*
-    SpectrumVZ shows the spectrum of the mic input
-    ========================
-    */
-    let spectrum_viz2: Box<Visualizer> = SpectrumVisualizer2::new(2, GREEN, RED, BLACK);
-    /*
-    SpectrumVZ shows the result of the frequency analysis
-    ========================
-    */
-    let spectrum_viz: Box<Visualizer> = Box::new(SpectrumVisualizer::new());
+    let mut visualizers = vec![];
     /*
     The defult VZ draws something
      ========================
@@ -78,12 +43,62 @@ fn main() -> ! {
     let default_viz: Box<Visualizer> =  DefaultVisualizer::new(
                           0xFFFF,
                           0xFC00);
+    visualizers.push(default_viz);
+    /*
+    DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from left to right, followed by clearscreen
+    ========================
+    */
+    let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(2);
+    visualizers.push(direct_mic_viz);
+    /*
+    DirectMicBatchVZ shows the soundwave from one mic like DirectSoundMic, but receives a batch of samples
+    ========================
+    */
+    let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(2);
+    //visualizers.push(direct_mic_batch_viz);
+    /*
+    SlidingSoundVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
+    draws bars
+    ========================
+    */
+    let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(2);
+    visualizers.push(sliding_viz);
+    /*
+    SlidingSoundPointsVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
+    draws points
+    ========================
+    */
+    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new( 2, RED, BLACK);
+    visualizers.push(sliding_points_viz);
+    /*
+    EnergyVZ shows a circle indicating the energy of the given samples (experimental)
+    ========================
+    */
+    let energy_viz: Box<Visualizer> = EnergyVisualizer::new();
+    //visualizers.push(energy_viz);
+     /*
+    SpectrumVZ shows the spectrum of the mic input
+    ========================
+    */
+    let spectrum_viz2: Box<Visualizer> = SpectrumVisualizer2::new(2, GREEN, RED, BLACK);
+    visualizers.push(spectrum_viz2);
+    /*
+    SpectrumVZ shows the result of the frequency analysis
+    ========================
+    */
+    let spectrum_viz: Box<Visualizer> = Box::new(SpectrumVisualizer::new());
+    //visualizers.push(spectrum_viz);
 
-    let mut current_visualizer = spectrum_viz2;
+    let mut current_visualizer = 0;
 
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
-        current_visualizer.draw(&mut stm);        
+        visualizers[current_visualizer].draw(&mut stm);
+        // poll for new touch data
+        if touch::touches(&mut stm.i2c_3).unwrap().len() > 0 {
+            current_visualizer = (current_visualizer +1) % visualizers.len();
+            stm.lcd.clear_screen();
+        }
     }
 }
 
