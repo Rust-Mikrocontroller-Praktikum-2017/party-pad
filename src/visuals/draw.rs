@@ -204,15 +204,8 @@ impl STM {
     }
 
 
-    pub fn print_bar_signed(&mut self, value: i16, pos: u16, width: u16, y_max: u16, color: u16) {
-        /*
-    let x_max = 480;
-    let y_max: u16 = 272;
-
-    assert!(pos < x_max);
-    assert!(pos + width < x_max);
-    */
-
+    pub fn print_bar_signed(&mut self, value: i16, pos: u16, width: u16, color: u16) {
+        
         //TODO how to scale properly?
         let scale_factor = value as f32 * 10.0 / core::i16::MAX as f32;
         //let scale_factor = value as f32 / core::i16::MAX as f32;
@@ -225,14 +218,14 @@ impl STM {
         if value > 0 {
             self.draw_rectangle_filled(pos,
                                        pos + width,
-                                       y_max / 2,
-                                       (y_max as i16 / 2 + value) as u16,
+                                       Y_MAX / 2,
+                                       (Y_MAX as i16 / 2 + value) as u16,
                                        color);
         } else {
             self.draw_rectangle_filled(pos,
                                        pos + width,
-                                       (y_max as i16 / 2 + value) as u16,
-                                       y_max / 2,
+                                       (Y_MAX as i16 / 2 + value) as u16,
+                                       Y_MAX / 2,
                                        color);
 
         }

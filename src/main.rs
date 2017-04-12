@@ -91,7 +91,8 @@ fn main() -> ! {
     let mut current_visualizer = 0;
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
-        visualizers[current_visualizer].draw(&mut stm);
+        visualizers[1].draw(&mut stm);
+        //visualizers[current_visualizer].draw(&mut stm);
         // poll for new touch data
         if touch::touches(&mut stm.i2c_3).unwrap().len() > 0 {
             current_visualizer = (current_visualizer +1) % visualizers.len();

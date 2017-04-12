@@ -21,7 +21,7 @@ impl<'a> Visualizer for DirectMicVisualizer {
             self.current_pos = 0;
             stm.lcd.clear_screen();
         }
-        stm.print_bar_signed(data0, self.current_pos, self.bar_width, Y_MAX, RED);
+        stm.print_bar_signed(data0, self.current_pos, self.bar_width, RED);
         self.current_pos += self.bar_width;
     }
 }
