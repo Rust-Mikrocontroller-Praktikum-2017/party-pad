@@ -27,8 +27,7 @@ use visuals::spectrum_visualizer2::SpectrumVisualizer2;
 
 use visuals::Visualizer;
 
-use stm32f7::lcd;
-use stm32f7::touch;
+use stm32f7::{lcd, touch, system_clock};
 
 #[inline(never)]
 fn main() -> ! {
@@ -49,13 +48,13 @@ fn main() -> ! {
     ========================
     */
     let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(2);
-    visualizers.push(direct_mic_viz);
+    //visualizers.push(direct_mic_viz);
     /*
     DirectMicBatchVZ shows the soundwave from one mic like DirectSoundMic, but receives a batch of samples
     ========================
     */
     let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(2);
-    //visualizers.push(direct_mic_batch_viz);
+    visualizers.push(direct_mic_batch_viz);
     /*
     SlidingSoundVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
     draws bars
@@ -90,7 +89,6 @@ fn main() -> ! {
     //visualizers.push(spectrum_viz);
 
     let mut current_visualizer = 0;
-
     stm.lcd.set_background_color(lcd::Color::rgb(0, 0, 0));
     loop {
         visualizers[current_visualizer].draw(&mut stm);
@@ -98,6 +96,7 @@ fn main() -> ! {
         if touch::touches(&mut stm.i2c_3).unwrap().len() > 0 {
             current_visualizer = (current_visualizer +1) % visualizers.len();
             stm.lcd.clear_screen();
+            system_clock::wait(100);
         }
     }
 }
