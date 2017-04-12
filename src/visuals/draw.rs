@@ -175,11 +175,7 @@ impl STM {
                                  y_max: u16,
                                  color: u16) {
 
-        for x in x_min..x_max {
-            for y in y_min..y_max {
-                self.lcd.print_point_color_at(x as u16, y as u16, color);
-            }
-        }
+        self.gfx.draw_rectangle_filled(x_min, x_max, y_min, y_max, color);
     }
 
     pub fn draw_spiral(&mut self, mut x_min: u16,mut x_max: u16, mut y_min: u16, mut y_max: u16, color1: u16, color2: u16) {

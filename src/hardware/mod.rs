@@ -3,12 +3,17 @@
 use stm32f7::{system_clock, sdram, lcd, i2c, audio, touch, board, embedded};
 use self::embedded::interfaces::gpio;
 
+mod graphics;
+
+pub use self::graphics::Graphics;
+
 pub struct STM {
     pub gpio: gpio::Gpio,
     pub i2c_3: i2c::I2C,
     pub lcd: lcd::Lcd,
     pub led: gpio::OutputPin,
     pub sai_2: &'static mut board::sai::Sai,
+    pub gfx : Graphics
 }
 
 impl STM {
@@ -99,6 +104,7 @@ impl STM {
             lcd: lcd,
             led: led,
             sai_2: sai_2,
+            gfx: Graphics::new()
         }
     }
 }
