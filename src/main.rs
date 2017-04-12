@@ -97,8 +97,8 @@ fn main() -> ! {
         if touch::touches(&mut stm.i2c_3).unwrap().len() > 0 {
             current_visualizer = (current_visualizer +1) % visualizers.len();
             stm.lcd.clear_screen();
-            system_clock::wait(100);
-        }
+            system_clock::wait(140);
+        } 
     }
 }
 
