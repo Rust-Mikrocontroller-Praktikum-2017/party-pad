@@ -1,26 +1,26 @@
 
 use super::{Visualizer, STM};
 use super::constants::*;
-use ::transformation::DFT;
-use ::transformation::hamming;
+use transformation::DFT;
+use transformation::hamming;
 use core;
 
 use collections::Vec;
 
-const LENGTH : usize = 512;
+const LENGTH: usize = 512;
 
 pub struct SpectrumVisualizer {
-    dft : DFT,
-    signal : Vec<f32>,
-    spectrum : Vec<f32>
+    dft: DFT,
+    signal: Vec<f32>,
+    spectrum: Vec<f32>,
 }
 
 impl SpectrumVisualizer {
     pub fn new() -> SpectrumVisualizer {
         SpectrumVisualizer {
-            dft : DFT::new(LENGTH),
-            signal : vec![0.0;LENGTH],
-            spectrum : vec![0.0;LENGTH]
+            dft: DFT::new(LENGTH),
+            signal: vec![0.0;LENGTH],
+            spectrum: vec![0.0;LENGTH],
         }
     }
 }
@@ -41,17 +41,17 @@ impl Visualizer for SpectrumVisualizer {
             let x = (2 * x) as u16;
             let v = (100.0 * v) as u16;
             let v = if v < 272 { v } else { 272 };
-            for y in 0..Y_MAX-v {
+            for y in 0..Y_MAX - v {
                 stm.lcd.print_point_color_at(x, y, 0);
-                stm.lcd.print_point_color_at(x+1, y, 0);
-                stm.lcd.print_point_color_at(x+2, y, 0);
-                stm.lcd.print_point_color_at(x+3, y, 0);
+                stm.lcd.print_point_color_at(x + 1, y, 0);
+                stm.lcd.print_point_color_at(x + 2, y, 0);
+                stm.lcd.print_point_color_at(x + 3, y, 0);
             }
-            for y in Y_MAX-v..Y_MAX {
+            for y in Y_MAX - v..Y_MAX {
                 stm.lcd.print_point_color_at(x, y, RED);
-                stm.lcd.print_point_color_at(x+1, y, RED);
-                stm.lcd.print_point_color_at(x+2, y, RED);
-                stm.lcd.print_point_color_at(x+3, y, RED);
+                stm.lcd.print_point_color_at(x + 1, y, RED);
+                stm.lcd.print_point_color_at(x + 2, y, RED);
+                stm.lcd.print_point_color_at(x + 3, y, RED);
             }
         }
     }

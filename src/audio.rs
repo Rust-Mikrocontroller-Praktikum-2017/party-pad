@@ -20,4 +20,3 @@ pub fn get_microphone_input(stm: &mut STM, audio_data: &mut [i16], mode: bool) {
         }
     }
 }
-

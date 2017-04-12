@@ -4,18 +4,18 @@ use core;
 
 pub struct DFT {
     fft_len: usize,
-    twiddles: &'static [f32]
+    twiddles: &'static [f32],
 }
 
 impl DFT {
     pub fn new(fft_len: usize) -> Self {
         DFT {
             fft_len: fft_len,
-            twiddles: twiddles::get_twiddles(fft_len)
+            twiddles: twiddles::get_twiddles(fft_len),
         }
     }
 
-    pub fn process(&mut self, signal: &[f32], magnitudes: &mut[f32]) {
+    pub fn process(&mut self, signal: &[f32], magnitudes: &mut [f32]) {
         assert_eq!(self.fft_len, signal.len());
         assert_eq!(self.fft_len, magnitudes.len());
         for k in 0..self.fft_len {

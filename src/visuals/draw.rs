@@ -151,13 +151,13 @@ impl STM {
         }
     }
 
-    pub fn draw_line_v(&mut self, x: u16, y_min: u16, y_max: u16,  color: u16) {
+    pub fn draw_line_v(&mut self, x: u16, y_min: u16, y_max: u16, color: u16) {
         for y in y_min..y_max {
             self.lcd.print_point_color_at(x, y, color);
         }
     }
-    
-    pub fn draw_rectangle(&mut self, x_min: u16,x_max: u16, y_min: u16, y_max: u16, color: u16) {
+
+    pub fn draw_rectangle(&mut self, x_min: u16, x_max: u16, y_min: u16, y_max: u16, color: u16) {
         for x in x_min..x_max {
             self.lcd.print_point_color_at(x, y_min, color);
             self.lcd.print_point_color_at(x, y_max - 1, color);
@@ -182,7 +182,13 @@ impl STM {
         }
     }
 
-    pub fn draw_spiral(&mut self, mut x_min: u16,mut x_max: u16, mut y_min: u16, mut y_max: u16, color1: u16, color2: u16) {
+    pub fn draw_spiral(&mut self,
+                       mut x_min: u16,
+                       mut x_max: u16,
+                       mut y_min: u16,
+                       mut y_max: u16,
+                       color1: u16,
+                       color2: u16) {
         let mut start_color = color1;
         let mut color = start_color;
 
@@ -190,7 +196,7 @@ impl STM {
             // only works because 480 is dividable by 5
 
             for _ in 0..5 {
-                self.draw_rectangle(x_min,x_max,y_min,y_max, color);
+                self.draw_rectangle(x_min, x_max, y_min, y_max, color);
                 // update variables
                 x_min += 1;
                 x_max -= 1;
@@ -199,13 +205,13 @@ impl STM {
             }
             color = if color == color1 { color2 } else { color1 }
         }
-        self.draw_rectangle(x_min,x_max,y_min,y_max, color);
+        self.draw_rectangle(x_min, x_max, y_min, y_max, color);
 
     }
 
 
     pub fn print_bar_signed(&mut self, value: i16, pos: u16, width: u16, color: u16) {
-        
+
         //TODO how to scale properly?
         let scale_factor = value as f32 * 10.0 / core::i16::MAX as f32;
         //let scale_factor = value as f32 / core::i16::MAX as f32;
@@ -230,10 +236,11 @@ impl STM {
 
         }
     }
-    pub fn draw_square(&mut self, x:u16, y:u16, length:u16, color:u16) {
+    pub fn draw_square(&mut self, x: u16, y: u16, length: u16, color: u16) {
         for x1 in x..(x + length) {
             for y1 in y..(y + length) {
-                self.lcd.print_point_color_at(x1 as u16, y1 as u16, color);
+                self.lcd
+                    .print_point_color_at(x1 as u16, y1 as u16, color);
             }
         }
 
@@ -245,9 +252,8 @@ impl STM {
                                 height: u16,
                                 color_low: u16,
                                 color_high: u16) {
-                                    
         for  {
-            let color = 
+            let color =
             self.draw_rectangle_filled(x,x+width,y,y+height,);
         }
     }*/

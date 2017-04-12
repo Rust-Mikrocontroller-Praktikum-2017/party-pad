@@ -15,4 +15,3 @@ pub const X_MAX: u16 = 480;
 pub const X_MIN: u16 = 0;
 pub const Y_MAX: u16 = 272;
 pub const Y_MIN: u16 = 0;
-

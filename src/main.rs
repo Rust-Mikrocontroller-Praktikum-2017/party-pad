@@ -39,35 +39,46 @@ fn main() -> ! {
     The defult VZ draws something
      ========================
     */
-    let default_viz: Box<Visualizer> =  DefaultVisualizer::new(
-                          0xFFFF,
-                          0xFC00);
+    let default_viz: Box<Visualizer> = DefaultVisualizer::new(0xFFFF, 0xFC00);
     visualizers.push(default_viz);
     /*
-    DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from left to right, followed by clearscreen
+    DirectMicVZ shows the soundwave from one mic. Draws one sample at at time from
+    eft to right, followed by clearscreen
     ========================
     */
     let direct_mic_viz: Box<Visualizer> = DirectMicVisualizer::new(2);
     //visualizers.push(direct_mic_viz);
     /*
-    DirectMicBatchVZ shows the soundwave from one mic like DirectSoundMic, but receives a batch of samples
+    DirectMicBatchVZ shows the soundwave from one mic like DirectSoundMic, but receives
+     a batch of samples
     ========================
     */
+
+
+
+
+
+
+
+
+
     let direct_mic_batch_viz: Box<Visualizer> = DirectMicBatchVisualizer::new(2);
     visualizers.push(direct_mic_batch_viz);
     /*
-    SlidingSoundVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
+    SlidingSoundVZ shows the soundwave from one mic by sliding the shown area to the right
+     upon receiving a new sample
     draws bars
     ========================
     */
     let sliding_viz: Box<Visualizer> = SlidingSoundVisualizer::new(2);
     visualizers.push(sliding_viz);
     /*
-    SlidingSoundPointsVZ shows the soundwave from one mic by sliding the shown area to the right upon receiving a new sample
+    SlidingSoundPointsVZ shows the soundwave from one mic by sliding the shown area to the
+    right upon receiving a new sample
     draws points
     ========================
     */
-    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new( 2, RED, BLACK);
+    let sliding_points_viz: Box<Visualizer> = SlidingSoundPointsVisualizer::new(2, RED, BLACK);
     visualizers.push(sliding_points_viz);
     /*
     EnergyVZ shows a circle indicating the energy of the given samples (experimental)
@@ -79,6 +90,15 @@ fn main() -> ! {
     SpectrumVZ shows the spectrum of the mic input
     ========================
     */
+
+
+
+
+
+
+
+
+
     let spectrum_viz2: Box<Visualizer> = SpectrumVisualizer2::new(2, GREEN, RED, BLACK);
     visualizers.push(spectrum_viz2);
     /*
@@ -95,10 +115,10 @@ fn main() -> ! {
         visualizers[current_visualizer].draw(&mut stm);
         // poll for new touch data
         if touch::touches(&mut stm.i2c_3).unwrap().len() > 0 {
-            current_visualizer = (current_visualizer +1) % visualizers.len();
+            current_visualizer = (current_visualizer + 1) % visualizers.len();
             stm.lcd.clear_screen();
             system_clock::wait(140);
-        } 
+        }
     }
 }
 
