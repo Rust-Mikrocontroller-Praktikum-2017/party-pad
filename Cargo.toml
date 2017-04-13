@@ -1,7 +1,8 @@
 [package]
 name = "party-pad"
 version = "0.1.0"
-authors = ["p3732 <p3732@users.noreply.github.com>"]
+authors = ["p3732 <p3732@users.noreply.github.com>, TobiasGraef <TobiasGraef@users.noreply.github.com>"]
+license = "MIT/Apache-2.0"
 
 [dependencies]
 cortex-m = "0.1.4"
